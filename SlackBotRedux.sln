@@ -9,18 +9,18 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SlackBotRedux.ConsoleDriver
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|Any CPU = Debug|Any CPU
-		Release|Any CPU = Release|Any CPU
+		Development|Any CPU = Development|Any CPU
+		Production|Any CPU = Production|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{19E36DF9-8A08-4AEE-A701-DBAE4B2D00CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{19E36DF9-8A08-4AEE-A701-DBAE4B2D00CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{19E36DF9-8A08-4AEE-A701-DBAE4B2D00CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{19E36DF9-8A08-4AEE-A701-DBAE4B2D00CF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A21DE23C-2770-4731-AB57-8BDBAE87B70B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A21DE23C-2770-4731-AB57-8BDBAE87B70B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A21DE23C-2770-4731-AB57-8BDBAE87B70B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A21DE23C-2770-4731-AB57-8BDBAE87B70B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{19E36DF9-8A08-4AEE-A701-DBAE4B2D00CF}.Development|Any CPU.ActiveCfg = Development|Any CPU
+		{19E36DF9-8A08-4AEE-A701-DBAE4B2D00CF}.Development|Any CPU.Build.0 = Development|Any CPU
+		{19E36DF9-8A08-4AEE-A701-DBAE4B2D00CF}.Production|Any CPU.ActiveCfg = Production|Any CPU
+		{19E36DF9-8A08-4AEE-A701-DBAE4B2D00CF}.Production|Any CPU.Build.0 = Production|Any CPU
+		{A21DE23C-2770-4731-AB57-8BDBAE87B70B}.Development|Any CPU.ActiveCfg = Development|Any CPU
+		{A21DE23C-2770-4731-AB57-8BDBAE87B70B}.Development|Any CPU.Build.0 = Development|Any CPU
+		{A21DE23C-2770-4731-AB57-8BDBAE87B70B}.Production|Any CPU.ActiveCfg = Production|Any CPU
+		{A21DE23C-2770-4731-AB57-8BDBAE87B70B}.Production|Any CPU.Build.0 = Production|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
