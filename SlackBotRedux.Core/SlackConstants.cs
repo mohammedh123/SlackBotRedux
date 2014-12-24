@@ -8,6 +8,7 @@ namespace SlackBotRedux.Core
 {
     public static class SlackConstants
     {
-        public const string SlackOAuth2Url = "https://slack.com/oauth/authorize";
+        public const string SlackBaseUrl = "https://slack.com";
+        public const string SlackBaseApiUrl = "https://slack.com/api";
     }
 }
