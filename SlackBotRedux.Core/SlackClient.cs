@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using NLog;
 using RestSharp;
 using RestSharp.Deserializers;
@@ -28,8 +30,15 @@ namespace SlackBotRedux.Core
         {
             Initialized,
             Connected,
-            HelloReceived,
             ReceivingMessages
+        }
+
+        private class EventMessage
+        {
+            public EventType Type { get; set; }
+
+            [JsonExtensionData]
+            public JObject Data { get; set; } 
         }
 
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
@@ -37,6 +46,7 @@ namespace SlackBotRedux.Core
         private readonly ManualResetEvent _waitEvent;
         private readonly string _slackBotApiToken;
         private readonly RestClient _restClient;
+        private readonly JsonDeserializer _deserializer;
         
         private Status _state = Status.Initialized;
 
@@ -45,35 +55,57 @@ namespace SlackBotRedux.Core
             _waitEvent = new ManualResetEvent(false);
             _slackBotApiToken = slackBotApiToken;
             _restClient = new RestClient(SlackConstants.SlackBaseApiUrl);
+            _deserializer = new JsonDeserializer();
         }
 
         private void SetState(Status newStatus)
         {
-            
+            Logger.Trace("Transitioning from {0} to {1}.", _state, newStatus);
+            _state = newStatus;
         }
 
         private void OnOpened(object sender, EventArgs args)
         {
-            Console.WriteLine("Connected.");
+            Logger.Trace("Connected.");
 
-            _state = Status.Connected;
+            SetState(Status.Connected);
         }
 
         private void OnError(object sender, ErrorEventArgs args)
         {
-            Console.WriteLine("Error: {0}", args.Exception);
+            Logger.Trace("Error received.", args.Exception);
         }
 
         private void OnClosed(object sender, EventArgs args)
         {
-            Console.WriteLine("Closed.");
+            Logger.Trace("Closed.");
 
             _waitEvent.Set();
         }
 
         private void OnMessageReceived(object sender, MessageReceivedEventArgs args)
         {
-            Console.WriteLine("Received message: {0}", args.Message);
+            Logger.Trace("Received message: {0}", args.Message);
+
+            var eventMsg = JsonConvert.DeserializeObject<EventMessage>(args.Message, new JsonSerializerSettings() { Converters = new List<JsonConverter> { new EventTypeEnumConverter() } });
+
+            if (_state == Status.Connected) {
+                if (eventMsg.Type == EventType.Hello) {
+                    SetState(Status.ReceivingMessages);
+                }
+                else if (eventMsg.Type == EventType.Error) {
+                    // todo: add retry capability
+                    var errorMsg = eventMsg.Data["msg"];
+                    var errorCode = eventMsg.Data["code"];
+
+                    Logger.Error("Error received when attempting to connect to RTM websocket server. Code = [{0}]; error message = [{1}].", errorCode, errorMsg);
+                }
+            }
+            else if (_state == Status.ReceivingMessages) {
+                switch (eventMsg.Type) {
+                    
+                }
+            }
         }
 
         public bool Start()
