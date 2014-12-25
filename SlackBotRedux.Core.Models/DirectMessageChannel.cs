@@ -24,7 +24,7 @@ namespace SlackBotRedux.Core.Models
         public bool IsUserDeleted { get; set; }
 
         public bool IsOpen { get; set; }
-        public long LastRead { get; set; }
+        public string LastRead { get; set; }
         public int UnreadCount { get; set; }
         public Message Latest { get; set; }
     }
