@@ -8,6 +8,8 @@ using RestSharp;
 using RestSharp.Deserializers;
 using SlackBotRedux.Core;
 using SlackBotRedux.Core.Models;
+using SuperSocket.ClientEngine;
+using WebSocket4Net;
 
 namespace SlackBotRedux.ConsoleDriver
 {
@@ -28,7 +30,38 @@ namespace SlackBotRedux.ConsoleDriver
 
                 Console.WriteLine("Press any key to continue...");
                 Console.ReadKey();
+                return;
             }
+
+            var websocket = new WebSocket(jsonResponse.Url);
+            websocket.Opened += OnOpened;
+            websocket.Error += OnError;
+            websocket.Closed += OnClosed;
+            websocket.MessageReceived += OnMessageReceived;
+            websocket.Open();
+
+            Console.WriteLine("Press any key to continue...");
+            Console.ReadKey();
+        }
+
+        private static void OnOpened(object sender, EventArgs args)
+        {
+            Console.WriteLine("Connected.");
+        }
+
+        private static void OnError(object sender, ErrorEventArgs args)
+        {
+            Console.WriteLine("Error: {0}", args.Exception);
+        }
+
+        private static void OnClosed(object sender, EventArgs args)
+        {
+            Console.WriteLine("Closed.");
+        }
+
+        private static void OnMessageReceived(object sender, MessageReceivedEventArgs args)
+        {
+            Console.WriteLine("Received message: {0}", args.Message);
         }
     }
 }
