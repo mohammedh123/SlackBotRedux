@@ -11,9 +11,9 @@ using SlackBotRedux.Core.Models;
 
 namespace SlackBotRedux.ConsoleDriver
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
             var client = new RestClient(SlackConstants.SlackBaseApiUrl);
             var request = new RestRequest("/rtm.start", Method.POST);
@@ -22,6 +22,13 @@ namespace SlackBotRedux.ConsoleDriver
             var response = client.Execute(request);
             var deserializer = new JsonDeserializer();
             var jsonResponse = deserializer.Deserialize<RtmStartResponse>(response);
+
+            if (!jsonResponse.Ok) {
+                Console.WriteLine("Error: " + jsonResponse.Error.ToString());
+
+                Console.WriteLine("Press any key to continue...");
+                Console.ReadKey();
+            }
         }
     }
 }
