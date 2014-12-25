@@ -62,6 +62,7 @@
     <Compile Include="SlackClient.cs" />
     <Compile Include="SlackConstants.cs" />
     <Compile Include="EventTypeEnumConverter.cs" />
+    <Compile Include="TeamState.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
