@@ -8,7 +8,7 @@ namespace SlackBotRedux.Core
 {
     public static class SlackConstants
     {
-        public const string SlackBaseUrl = "https://slack.com";
         public const string SlackBaseApiUrl = "https://slack.com/api";
+        public const string RtmStartAbsolutePath = "/rtm.start";
     }
 }
