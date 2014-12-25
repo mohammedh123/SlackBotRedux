@@ -47,8 +47,10 @@ namespace SlackBotRedux.Core
         private readonly string _slackBotApiToken;
         private readonly RestClient _restClient;
         private readonly JsonDeserializer _deserializer;
+        private readonly JsonSerializerSettings _deserializerSettings = new JsonSerializerSettings() { Converters = new List<JsonConverter> { new EventTypeEnumConverter() } };
         
         private Status _state = Status.Initialized;
+        private TeamState _teamState;
 
         public SlackClient(string slackBotApiToken)
         {
@@ -87,7 +89,7 @@ namespace SlackBotRedux.Core
         {
             Logger.Trace("Received message: {0}", args.Message);
 
-            var eventMsg = JsonConvert.DeserializeObject<EventMessage>(args.Message, new JsonSerializerSettings() { Converters = new List<JsonConverter> { new EventTypeEnumConverter() } });
+            var eventMsg = JsonConvert.DeserializeObject<EventMessage>(args.Message, _deserializerSettings);
 
             if (_state == Status.Connected) {
                 if (eventMsg.Type == EventType.Hello) {
@@ -95,15 +97,25 @@ namespace SlackBotRedux.Core
                 }
                 else if (eventMsg.Type == EventType.Error) {
                     // todo: add retry capability
-                    var errorMsg = eventMsg.Data["msg"];
-                    var errorCode = eventMsg.Data["code"];
+                    var errorMsg = eventMsg.Data["error"]["msg"];
+                    var errorCode = eventMsg.Data["error"]["code"];
 
                     Logger.Error("Error received when attempting to connect to RTM websocket server. Code = [{0}]; error message = [{1}].", errorCode, errorMsg);
                 }
             }
             else if (_state == Status.ReceivingMessages) {
-                switch (eventMsg.Type) {
-                    
+                if (eventMsg.Type == EventType.Message) {
+                    var msg = JsonConvert.DeserializeObject<Message>(args.Message, _deserializerSettings);
+
+                    // ignore non-plain messages
+                    if (msg.SubType != MessageSubType.PlainMessage) return;
+                }
+                else if (eventMsg.Type == EventType.UserChange) {
+                    var userChangeMsg = JsonConvert.DeserializeObject<UserChangeMessage>(args.Message,
+                        _deserializerSettings);
+                    var user = userChangeMsg.User;
+
+                    UpsertUserInTeamState(user);
                 }
             }
         }
@@ -124,6 +136,8 @@ namespace SlackBotRedux.Core
                 return false;
             }
 
+            UpdateTeamState(jsonResponse);
+            
             var websocket = new WebSocket(jsonResponse.Url);
             websocket.Opened += OnOpened;
             websocket.Error += OnError;
@@ -133,6 +147,22 @@ namespace SlackBotRedux.Core
 
             _waitEvent.WaitOne();
             return true;
+        }
+
+        private void UpdateTeamState(RtmStartResponse rtmResponse)
+        {
+            // populate team state
+            _teamState = new TeamState() { UsersById = rtmResponse.Users.ToDictionary(u => u.Id) };
+        }
+
+        private void UpsertUserInTeamState(User user)
+        {
+            if (_teamState.UsersById.ContainsKey(user.Id)) {
+                _teamState.UsersById[user.Id] = user;
+            }
+            else {
+                _teamState.UsersById.Add(user.Id, user);
+            }
         }
     }
 }
