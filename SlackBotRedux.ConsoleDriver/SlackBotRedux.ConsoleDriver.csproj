@@ -42,6 +42,7 @@
       <HintPath>..\packages\RestSharp.105.0.1\lib\net4\RestSharp.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -59,6 +60,16 @@
     </None>
     <None Include="packages.config" />
     <None Include="Properties\SlowCheetah\SlowCheetah.Transforms.targets" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SlackBotRedux.Core.Models\SlackBotRedux.Core.Models.csproj">
+      <Project>{106029E5-BBDC-4A03-B479-FED22679E0CB}</Project>
+      <Name>SlackBotRedux.Core.Models</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SlackBotRedux.Core\SlackBotRedux.Core.csproj">
+      <Project>{19e36df9-8a08-4aee-a701-dbae4b2d00cf}</Project>
+      <Name>SlackBotRedux.Core</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SlowCheetahTargets)" Condition="Exists('$(SlowCheetahTargets)')" Label="SlowCheetah" />
