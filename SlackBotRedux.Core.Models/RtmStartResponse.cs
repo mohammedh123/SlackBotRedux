@@ -10,6 +10,14 @@ namespace SlackBotRedux.Core.Models
     {
         public bool Ok { get; set; }
 
+        public enum ErrorType
+        {
+            NotAuthed,
+            InvalidAuth,
+            AccountInactive
+        }
+        public ErrorType Error { get; set; }
+
         /// <summary>
         /// The WebSocket Message Server URL; connecting to this URL will initiate a Real Time Messaging session. These URLs are only valid for 30 seconds.
         /// </summary>
