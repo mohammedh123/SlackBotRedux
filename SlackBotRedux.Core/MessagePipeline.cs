@@ -62,8 +62,6 @@ namespace SlackBotRedux.Core
             foreach (var message in _queueOfInputMessages.GetConsumingEnumerable()) {
                 Logger.Trace("Processing input message; Id: {0}; Text: {1}; Channel: {2}.", message.Text,
                     message.Channel);
-
-                EnqueueOutputMessage(new OutputMessage(1, "C029CLL9T", "HELLO TEST"));
             }
         }
 
