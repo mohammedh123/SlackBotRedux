@@ -10,7 +10,7 @@ namespace SlackBotRedux.Core.Models
     /// Contains information about Slack messages.
     /// More information can be found at https://api.slack.com/events/message.
     /// </summary>
-    public class Message
+    public class InputMessage
     {
         public string Type { get; set; }
         public MessageSubType SubType { get; set; }
