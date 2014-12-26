@@ -52,6 +52,9 @@ namespace SlackBotRedux.Core
         private Status _state = Status.Initialized;
         private TeamState _teamState;
 
+        private MessagePipeline _pipeline;
+        private WebSocket _websocket;
+
         public SlackClient(string slackBotApiToken)
         {
             _waitEvent = new ManualResetEvent(false);
@@ -94,6 +97,8 @@ namespace SlackBotRedux.Core
             if (_state == Status.Connected) {
                 if (eventMsg.Type == EventType.Hello) {
                     SetState(Status.ReceivingMessages);
+
+                    _pipeline.BeginProcessing();
                 }
                 else if (eventMsg.Type == EventType.Error) {
                     // todo: add retry capability
@@ -105,10 +110,12 @@ namespace SlackBotRedux.Core
             }
             else if (_state == Status.ReceivingMessages) {
                 if (eventMsg.Type == EventType.Message) {
-                    var msg = JsonConvert.DeserializeObject<Message>(args.Message, _deserializerSettings);
+                    var msg = JsonConvert.DeserializeObject<InputMessage>(args.Message, _deserializerSettings);
 
                     // ignore non-plain messages
                     if (msg.SubType != MessageSubType.PlainMessage) return;
+
+                    _pipeline.EnqueueInputMessage(msg);
                 }
                 else if (eventMsg.Type == EventType.UserChange) {
                     var userChangeMsg = JsonConvert.DeserializeObject<UserChangeMessage>(args.Message,
@@ -137,13 +144,14 @@ namespace SlackBotRedux.Core
             }
 
             UpdateTeamState(jsonResponse);
-            
-            var websocket = new WebSocket(jsonResponse.Url);
-            websocket.Opened += OnOpened;
-            websocket.Error += OnError;
-            websocket.Closed += OnClosed;
-            websocket.MessageReceived += OnMessageReceived;
-            websocket.Open();
+
+            _websocket = new WebSocket(jsonResponse.Url);
+            _pipeline = new MessagePipeline(_websocket);
+            _websocket.Opened += OnOpened;
+            _websocket.Error += OnError;
+            _websocket.Closed += OnClosed;
+            _websocket.MessageReceived += OnMessageReceived;
+            _websocket.Open();
 
             _waitEvent.WaitOne();
             return true;
