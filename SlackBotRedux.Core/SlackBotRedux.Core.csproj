@@ -58,12 +58,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="LowerCaseDelimitedPropertyNamesContractResolver.cs" />
+    <Compile Include="JsonHelpers\EventTypeEnumConverter.cs" />
+    <Compile Include="JsonHelpers\LowerCaseDelimitedPropertyNamesContractResolver.cs" />
     <Compile Include="MessagePipeline.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SlackClient.cs" />
     <Compile Include="SlackConstants.cs" />
-    <Compile Include="EventTypeEnumConverter.cs" />
     <Compile Include="TeamState.cs" />
   </ItemGroup>
   <ItemGroup>

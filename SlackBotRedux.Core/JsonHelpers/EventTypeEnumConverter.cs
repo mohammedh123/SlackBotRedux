@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using SlackBotRedux.Core.Models;
 
-namespace SlackBotRedux.Core
+namespace SlackBotRedux.Core.JsonHelpers
 {
     public class EventTypeEnumConverter : StringEnumConverter
     { 

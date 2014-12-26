@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json.Serialization;
 
-namespace SlackBotRedux.Core
+namespace SlackBotRedux.Core.JsonHelpers
 {
     // http://www.vicesoftware.com/uncategorized/extending-json-net-to-serialize-json-properties-using-a-format-that-is-delimited-by-dashes-and-all-lower-case/
     public class LowerCaseDelimitedPropertyNamesContractResolver : DefaultContractResolver
