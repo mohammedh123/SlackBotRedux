@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SlackBotRedux.ConsoleDriver
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SlackBotRedux.Core.Models", "SlackBotRedux.Core.Models\SlackBotRedux.Core.Models.csproj", "{106029E5-BBDC-4A03-B479-FED22679E0CB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SlackBotRedux.Core.Modules", "SlackBotRedux.Core.Modules\SlackBotRedux.Core.Modules.csproj", "{4A888B0B-6805-40C2-8BD6-9F2A03A8423E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,6 +43,14 @@ Global
 		{106029E5-BBDC-4A03-B479-FED22679E0CB}.Production|Any CPU.Build.0 = Release|Any CPU
 		{106029E5-BBDC-4A03-B479-FED22679E0CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{106029E5-BBDC-4A03-B479-FED22679E0CB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4A888B0B-6805-40C2-8BD6-9F2A03A8423E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A888B0B-6805-40C2-8BD6-9F2A03A8423E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A888B0B-6805-40C2-8BD6-9F2A03A8423E}.Development|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A888B0B-6805-40C2-8BD6-9F2A03A8423E}.Development|Any CPU.Build.0 = Debug|Any CPU
+		{4A888B0B-6805-40C2-8BD6-9F2A03A8423E}.Production|Any CPU.ActiveCfg = Release|Any CPU
+		{4A888B0B-6805-40C2-8BD6-9F2A03A8423E}.Production|Any CPU.Build.0 = Release|Any CPU
+		{4A888B0B-6805-40C2-8BD6-9F2A03A8423E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A888B0B-6805-40C2-8BD6-9F2A03A8423E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
