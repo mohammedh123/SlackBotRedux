@@ -51,4 +51,36 @@ namespace SlackBotRedux.Core
             }
         }
     }
+
+    internal class UpdateTeamListener : AbstractListener
+    {
+        public UpdateTeamListener(Bot bot)
+            : base(msg => msg is UpdateTeamBotMessage,
+            msg => ProcessMessage(bot, msg))
+        { }
+
+        private static bool ProcessMessage(Bot bot, BotMessage msg)
+        {
+            var updateTeamMsg = (UpdateTeamBotMessage)msg;
+            bot.UpdateTeamState(updateTeamMsg.TeamState);
+
+            return true;
+        }
+    }
+
+    internal class UpdateUserListener : AbstractListener
+    {
+        public UpdateUserListener(Bot bot)
+            : base(msg => msg is UpdateUserBotMessage,
+            msg => ProcessMessage(bot, msg))
+        { }
+
+        private static bool ProcessMessage(Bot bot, BotMessage msg)
+        {
+            var updateUserMsg = (UpdateUserBotMessage)msg;
+            bot.UpsertUserInTeamState(updateUserMsg.User);
+
+            return true;
+        }
+    }
 }
