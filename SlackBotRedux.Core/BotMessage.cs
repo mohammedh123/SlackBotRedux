@@ -10,7 +10,8 @@ namespace SlackBotRedux.Core
 {
     public abstract class BotMessage
     {
-        public BotMessageType Type { get; private set; }
+        public BotMessageType Type { get; set; }
+        public bool IsFinishedBeingProcessed { get; set; }
 
         public BotMessage(BotMessageType type)
         {
@@ -48,10 +49,21 @@ namespace SlackBotRedux.Core
         }
     }
 
+    public class FallbackMessage : BotMessage
+    {
+        public BotMessage OriginalMessage { get; private set; }
+
+        public FallbackMessage(BotMessage originalMessage) : base(BotMessageType.Fallback)
+        {
+            OriginalMessage = originalMessage;
+        }
+    }
+
     public enum BotMessageType
     {
         UpdateTeam,
         UpdateUser,
-        TextInput
+        TextInput,
+        Fallback
     }
 }

@@ -10,37 +10,38 @@ namespace SlackBotRedux.Core
     public class Bot
     {
         private TeamState _teamState;
+        private readonly IList<AbstractListener> _listeners;
+
+        public Bot()
+        {
+            _listeners = new List<AbstractListener>
+            {
+                new UpdateTeamListener(this),
+                new UpdateUserListener(this)
+            };
+        }
 
         public void ReceiveMessage(BotMessage msg)
         {
-            switch (msg.Type) {
-                case BotMessageType.UpdateTeam:
-                {
-                    var updateTeamMsg = (UpdateTeamBotMessage) msg;
-                    UpdateTeamState(updateTeamMsg.TeamState);
+            var results = new List<bool>();
+            foreach (var listener in _listeners) {
+                results.Add(listener.Listen(msg));
 
-                    break;
-                }
-                case BotMessageType.UpdateUser:
-                {
-                    var updateUserMsg = (UpdateUserBotMessage)msg;
-                    UpsertUserInTeamState(updateUserMsg.User);
+                if (msg.IsFinishedBeingProcessed) break;
+            }
 
-                    break;
-                }
-                case BotMessageType.TextInput:
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
+            // if none of the listeners care for this message (and its not a fallback msg), then update the msg type to a Fallback message
+            if (!results.Any(b => b) && !(msg is FallbackMessage)) {
+                ReceiveMessage(new FallbackMessage(msg));
             }
         }
 
-        private void UpdateTeamState(TeamState teamState)
+        internal void UpdateTeamState(TeamState teamState)
         {
             _teamState = teamState;
         }
 
-        private void UpsertUserInTeamState(User user)
+        internal void UpsertUserInTeamState(User user)
         {
             if (_teamState.UsersById.ContainsKey(user.Id)) {
                 _teamState.UsersById[user.Id] = user;
