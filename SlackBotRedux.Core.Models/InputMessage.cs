@@ -15,6 +15,8 @@ namespace SlackBotRedux.Core.Models
         public string Type { get; set; }
         public MessageSubType SubType { get; set; }
 
+        public User User { get; set; }
+
         /// <summary>
         /// The id of the channel this message was posted in.
         /// </summary>
