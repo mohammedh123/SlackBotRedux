@@ -19,7 +19,7 @@ namespace SlackBotRedux.Core
     {
         void EnqueueInputMessage(InputMessage msg);
         void EnqueueOutputMessage(OutputMessage msg);
-        void BeginProcessing();
+        void BeginProcessing(Bot bot);
     }
 
     public class MessagePipeline : IMessagePipeline
@@ -51,17 +51,19 @@ namespace SlackBotRedux.Core
             _queueOfOutputMessages.Add(msg);
         }
 
-        public void BeginProcessing()
+        public void BeginProcessing(Bot bot)
         {
-            Task.Run(() => ProcessInputMessages());
+            Task.Run(() => ProcessInputMessages(bot));
             Task.Run(() => ProcessOutputMessages());
         }
 
-        private void ProcessInputMessages()
+        private void ProcessInputMessages(Bot bot)
         {
             foreach (var message in _queueOfInputMessages.GetConsumingEnumerable()) {
-                Logger.Trace("Processing input message; Id: {0}; Text: {1}; Channel: {2}.", message.Text,
+                Logger.Trace("Processing input message; Text: {0}; Channel: {1}.", message.Text,
                     message.Channel);
+
+                bot.ReceiveMessage(new TextInputBotMessage(message));
             }
         }
 

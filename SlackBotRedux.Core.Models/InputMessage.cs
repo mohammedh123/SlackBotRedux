@@ -48,6 +48,14 @@ namespace SlackBotRedux.Core.Models
         // TODO: find way of supporting all the metadata associated with the derived message types
     }
 
+    public class InputMessageSlim
+    {
+        public string ChannelId { get; set; }
+        public string Text { get; set; }
+        public string Timestamp { get; set; }
+        public string UserId { get; set; }
+    }
+
     public enum MessageSubType
     {
         PlainMessage,

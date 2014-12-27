@@ -51,10 +51,11 @@ namespace SlackBotRedux.Core
         private readonly JsonSerializerSettings _deserializerSettings = new JsonSerializerSettings() { Converters = new List<JsonConverter> { new EventTypeEnumConverter() } };
         
         private Status _state = Status.Initialized;
-        private TeamState _teamState;
-
+        
         private MessagePipeline _pipeline;
         private WebSocket _websocket;
+
+        private readonly Bot _bot;
 
         public SlackClient(string slackBotApiToken)
         {
@@ -62,6 +63,8 @@ namespace SlackBotRedux.Core
             _slackBotApiToken = slackBotApiToken;
             _restClient = new RestClient(SlackConstants.SlackBaseApiUrl);
             _deserializer = new JsonDeserializer();
+
+            _bot = new Bot();
         }
 
         private void SetState(Status newStatus)
@@ -99,7 +102,7 @@ namespace SlackBotRedux.Core
                 if (eventMsg.Type == EventType.Hello) {
                     SetState(Status.ReceivingMessages);
 
-                    _pipeline.BeginProcessing();
+                    _pipeline.BeginProcessing(_bot);
                 }
                 else if (eventMsg.Type == EventType.Error) {
                     // todo: add retry capability
@@ -123,7 +126,7 @@ namespace SlackBotRedux.Core
                         _deserializerSettings);
                     var user = userChangeMsg.User;
 
-                    UpsertUserInTeamState(user);
+                    _bot.ReceiveMessage(new UpdateUserBotMessage(user));
                 }
             }
         }
@@ -144,7 +147,7 @@ namespace SlackBotRedux.Core
                 return false;
             }
 
-            UpdateTeamState(jsonResponse);
+            _bot.ReceiveMessage(new UpdateTeamBotMessage(new TeamState() { UsersById = jsonResponse.Users.ToDictionary(u => u.Id) }));
 
             _websocket = new WebSocket(jsonResponse.Url);
             _pipeline = new MessagePipeline(_websocket);
@@ -156,22 +159,6 @@ namespace SlackBotRedux.Core
 
             _waitEvent.WaitOne();
             return true;
-        }
-
-        private void UpdateTeamState(RtmStartResponse rtmResponse)
-        {
-            // populate team state
-            _teamState = new TeamState() { UsersById = rtmResponse.Users.ToDictionary(u => u.Id) };
-        }
-
-        private void UpsertUserInTeamState(User user)
-        {
-            if (_teamState.UsersById.ContainsKey(user.Id)) {
-                _teamState.UsersById[user.Id] = user;
-            }
-            else {
-                _teamState.UsersById.Add(user.Id, user);
-            }
         }
     }
 }

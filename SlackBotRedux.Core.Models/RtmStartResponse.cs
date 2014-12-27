@@ -31,7 +31,7 @@ namespace SlackBotRedux.Core.Models
             /// <summary>
             /// User-specific preferences.
             /// </summary>
-            public Dictionary<string, string> Prefs { get; set; }
+            public Dictionary<string, object> Prefs { get; set; }
 
             /// <summary>
             /// The date the user was created (Unix timestamp).

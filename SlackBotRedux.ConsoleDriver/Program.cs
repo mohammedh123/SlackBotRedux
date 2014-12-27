@@ -16,7 +16,6 @@ namespace SlackBotRedux.ConsoleDriver
 {
     internal class Program
     {
-
         public static void Main(string[] args)
         {
             var slackClient = new SlackClient(ConfigurationManager.AppSettings["BotApiToken"]);
