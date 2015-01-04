@@ -47,6 +47,7 @@
       <HintPath>..\packages\RestSharp.105.0.1\lib\net4\RestSharp.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -58,10 +59,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AbstractListener.cs" />
     <Compile Include="IModule.cs" />
     <Compile Include="JsonHelpers\EventTypeEnumConverter.cs" />
     <Compile Include="JsonHelpers\LowerCaseDelimitedPropertyNamesContractResolver.cs" />
+    <Compile Include="Listeners\AbstractListener.cs" />
+    <Compile Include="Listeners\TextListener.cs" />
     <Compile Include="MessagePipeline.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Bot.cs" />

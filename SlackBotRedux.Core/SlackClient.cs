@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -64,7 +65,8 @@ namespace SlackBotRedux.Core
             _restClient = new RestClient(SlackConstants.SlackBaseApiUrl);
             _deserializer = new JsonDeserializer();
 
-            _bot = new Bot();
+            var botName = ConfigurationManager.AppSettings["BotName"];
+            _bot = new Bot(botName);
         }
 
         private void SetState(Status newStatus)
