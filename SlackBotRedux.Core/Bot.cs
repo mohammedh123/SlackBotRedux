@@ -71,7 +71,7 @@ namespace SlackBotRedux.Core
 
             var newRegexPartOne = String.Format(@"^@?{0}[:,]\s+", Regex.Escape(_botName));
             var newRegexPartTwo = regexStr;
-            var finalRegex = new Regex(newRegexPartOne + regexStr);
+            var finalRegex = new Regex(newRegexPartOne + newRegexPartTwo);
 
             _listeners.Add(new TextListener(finalRegex, callback));
         }
