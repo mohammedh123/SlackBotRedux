@@ -21,14 +21,20 @@ namespace SlackBotRedux.Tests.Core
         [TestClass]
         public class RespondTo : TBot
         {
-            private void TestIfBotRespondsTo(string msgText, bool reactedTo)
+            private void TestIfBotRespondsTo(string msgText, ref bool reactedTo, bool shouldWork = true)
             {
                 Subject.ReceiveMessage(new TextInputBotMessage(new InputMessage { Text = msgText }));
                 reactedTo.Should().BeTrue();
             }
 
+            private void TestIfBotDoesntRespondTo(string msgText, ref bool reactedTo)
+            {
+                Subject.ReceiveMessage(new TextInputBotMessage(new InputMessage { Text = msgText }));
+                reactedTo.Should().BeFalse();
+            }
+
             [TestMethod]
-            public void ShouldRespondWhenNotIncludingBotName()
+            public void ShouldRespondWhenIncludingBotName()
             {
                 // Setup
                 var reactedTo = false;
@@ -38,11 +44,26 @@ namespace SlackBotRedux.Tests.Core
                 });
 
                 // Act+Verify
-                TestIfBotRespondsTo("milkbot, hello", reactedTo);
-                TestIfBotRespondsTo("milkbot: hello", reactedTo);
-                TestIfBotRespondsTo("@milkbot hello", reactedTo);
-                TestIfBotRespondsTo("@milkbot: hello", reactedTo);
-                TestIfBotRespondsTo("@milkbot, hello", reactedTo);
+                TestIfBotRespondsTo("milkbot, hello", ref reactedTo);
+                TestIfBotRespondsTo("milkbot: hello", ref reactedTo);
+                TestIfBotRespondsTo("@milkbot: hello", ref reactedTo);
+                TestIfBotRespondsTo("@milkbot, hello", ref reactedTo);
+            }
+
+            [TestMethod]
+            public void ShouldNotRespondWhenNotIncludingBotNameOrIncludingUnsupportedAlias()
+            {
+                // Setup
+                var reactedTo = false;
+                Subject.RespondTo(new Regex("hello"), msg =>
+                {
+                    reactedTo = true;
+                });
+
+                // Act+Verify
+                TestIfBotDoesntRespondTo("hello", ref reactedTo);
+                TestIfBotDoesntRespondTo("milkbot hello", ref reactedTo);
+                TestIfBotDoesntRespondTo("@milkbot hello", ref reactedTo);
             }
         }
     }

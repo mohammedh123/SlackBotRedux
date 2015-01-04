@@ -69,7 +69,7 @@ namespace SlackBotRedux.Core
             var regexStr = regex.ToString();
             if(regexStr.StartsWith("^")) throw new ArgumentException("The supplied regex has an anchor in it; pass in a regex without one.");
 
-            var newRegexPartOne = String.Format(@"^@?{0}[:,]?\s+", Regex.Escape(_botName));
+            var newRegexPartOne = String.Format(@"^@?{0}[:,]\s+", Regex.Escape(_botName));
             var newRegexPartTwo = regexStr;
             var finalRegex = new Regex(newRegexPartOne + regexStr);
 
