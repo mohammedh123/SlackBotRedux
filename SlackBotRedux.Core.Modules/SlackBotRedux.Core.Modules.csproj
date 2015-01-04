@@ -40,6 +40,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="QuotesModule.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SlackBotRedux.Core\SlackBotRedux.Core.csproj">
+      <Project>{19E36DF9-8A08-4AEE-A701-DBAE4B2D00CF}</Project>
+      <Name>SlackBotRedux.Core</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
