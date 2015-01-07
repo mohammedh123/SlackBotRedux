@@ -39,7 +39,7 @@ namespace SlackBotRedux.Tests.Core
             {
                 // Setup
                 var reactedTo = false;
-                Subject.RespondTo(new Regex("hello"), msg =>
+                Subject.RespondTo("hello", msg =>
                 {
                     reactedTo = true;
                 });
@@ -57,7 +57,7 @@ namespace SlackBotRedux.Tests.Core
             {
                 // Setup
                 var reactedTo = false;
-                Subject.RespondTo(new Regex("hello"), msg =>
+                Subject.RespondTo("hello", msg =>
                 {
                     reactedTo = true;
                 });
@@ -73,7 +73,7 @@ namespace SlackBotRedux.Tests.Core
             {
                 // Setup
                 var reactedTo = false;
-                Subject.RespondTo(new Regex(@"hello (\w+)"), msg =>
+                Subject.RespondTo(@"hello (\w+)", msg =>
                 {
                     reactedTo = true;
 
@@ -93,7 +93,7 @@ namespace SlackBotRedux.Tests.Core
             {
                 // Setup
                 var reactedTo = false;
-                Subject.RespondTo(new Regex(@"hello"), msg =>
+                Subject.RespondTo(@"hello", msg =>
                 {
                     reactedTo = true;
                 });
@@ -108,23 +108,27 @@ namespace SlackBotRedux.Tests.Core
             {
                 // Act+Verify
                 Subject
-                    .Invoking(b => b.RespondTo(new Regex(@"^hello"), _ => { }))
+                    .Invoking(b => b.RespondTo(@"^hello", _ => { }))
                     .ShouldThrow<ArgumentException>();
 
                 Subject
-                    .Invoking(b => b.RespondTo(new Regex(@"hello$"), _ => { }))
+                    .Invoking(b => b.RespondTo(@"hello$", _ => { }))
                     .ShouldThrow<ArgumentException>();
 
                 Subject
-                    .Invoking(b => b.RespondTo(new Regex(@"hel\Alo"), _ => { }))
+                    .Invoking(b => b.RespondTo(@"hello\$", _ => { }))
+                    .ShouldNotThrow();
+
+                Subject
+                    .Invoking(b => b.RespondTo(@"hel\Alo", _ => { }))
                     .ShouldThrow<ArgumentException>();
 
                 Subject
-                    .Invoking(b => b.RespondTo(new Regex(@"hel\Zlo"), _ => { }))
+                    .Invoking(b => b.RespondTo(@"hel\Zlo", _ => { }))
                     .ShouldThrow<ArgumentException>();
 
                 Subject
-                    .Invoking(b => b.RespondTo(new Regex(@"hel\zlo"), _ => { }))
+                    .Invoking(b => b.RespondTo(@"hel\zlo", _ => { }))
                     .ShouldThrow<ArgumentException>();
             }
         }

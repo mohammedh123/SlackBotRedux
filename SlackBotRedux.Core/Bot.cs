@@ -12,9 +12,9 @@ namespace SlackBotRedux.Core
     public interface IBotRegistrar
     {
         /// <summary>
-        /// Adds a listener that listens for messages that match the regex exactly (as if the regex started with '^' and ended with '$'). It will only match for messages that occur after "botname: ", "@botname", etc.
+        /// Adds a listener that listens for messages that match the regex exactly (as if the regex started with '^' and ended with '$'). It will only match for messages that occur after "botname: ", "@botname", etc, and is case insensitive.
         /// </summary>
-        void RespondTo(Regex regex, Action<BotMessage> callback);
+        void RespondTo(string regex, Action<BotMessage> callback);
     }
 
     public class Bot : IBotRegistrar
@@ -66,19 +66,18 @@ namespace SlackBotRedux.Core
             }
         }
 
-        public void RespondTo(Regex regex, Action<BotMessage> callback)
+        public void RespondTo(string regex, Action<BotMessage> callback)
         {
-            var regexStr = regex.ToString();
-            if(regexStr.StartsWith("^")) throw new ArgumentException(String.Format("The supplied regex begins with the caret anchor; pass in a regex without one."));
-            if(regexStr.EndsWith("$") && !regexStr.EndsWith(@"\$")) throw new ArgumentException(String.Format("The supplied regex ends with the dollar anchor; pass in a regex without one."));
+            if(regex.StartsWith("^")) throw new ArgumentException(String.Format("The supplied regex begins with the caret anchor; pass in a regex without one."));
+            if(regex.EndsWith("$") && !regex.EndsWith(@"\$")) throw new ArgumentException(String.Format("The supplied regex ends with the dollar anchor; pass in a regex without one."));
 
             foreach (var illegalAnchor in IllegalAnchors) {
-                if(regexStr.Contains(illegalAnchor)) throw new ArgumentException(String.Format("The supplied regex contains an illegal anchor; pass in a regex without the following illegal anchor: {0}", illegalAnchor));
+                if(regex.Contains(illegalAnchor)) throw new ArgumentException(String.Format("The supplied regex contains an illegal anchor; pass in a regex without the following illegal anchor: {0}", illegalAnchor));
             }
             
             var newRegexPartOne = String.Format(@"^@?{0}[:,]\s+", Regex.Escape(_botName));
-            var newRegexPartTwo = regexStr + "$";
-            var finalRegex = new Regex(newRegexPartOne + newRegexPartTwo);
+            var newRegexPartTwo = regex + "$";
+            var finalRegex = new Regex(newRegexPartOne + newRegexPartTwo, RegexOptions.IgnoreCase);
 
             _listeners.Add(new TextListener(finalRegex, callback));
         }
