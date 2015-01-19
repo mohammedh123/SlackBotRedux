@@ -16,6 +16,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SlackBotRedux.Tests", "SlackBotRedux.Tests\SlackBotRedux.Tests.csproj", "{79965783-A907-4196-B231-123DD38BF2C2}"
 EndProject
 Global
+	GlobalSection(CodealikeProperties) = postSolution
+		SolutionGuid = 4e40b2a7-eb28-490c-8ff5-9c46abf45240
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Development|Any CPU = Development|Any CPU
