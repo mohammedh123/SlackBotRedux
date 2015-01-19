@@ -15,11 +15,15 @@ namespace SlackBotRedux.Core
     /// <summary>
     /// An in-memory queue of messages received from Slack waiting to be processed.
     /// </summary>
-    public interface IMessagePipeline
+    public interface IMessagePipeline : IMessageSender
     {
         void EnqueueInputMessage(InputMessage msg);
-        void EnqueueOutputMessage(OutputMessage msg);
         void BeginProcessing(Bot bot);
+    }
+
+    public interface IMessageSender
+    {
+        void EnqueueOutputMessage(string channel, string text);
     }
 
     public class MessagePipeline : IMessagePipeline
@@ -28,6 +32,7 @@ namespace SlackBotRedux.Core
         private readonly WebSocket _websocket;
         private readonly BlockingCollection<InputMessage> _queueOfInputMessages;
         private readonly BlockingCollection<OutputMessage> _queueOfOutputMessages;
+        private uint _outgoingMsgId = 1;
 
         private readonly JsonSerializerSettings _serializerSettings = new JsonSerializerSettings()
         {
@@ -46,9 +51,10 @@ namespace SlackBotRedux.Core
             _queueOfInputMessages.Add(msg);
         }
 
-        public void EnqueueOutputMessage(OutputMessage msg)
+        public void EnqueueOutputMessage(string channel, string text)
         {
-            _queueOfOutputMessages.Add(msg);
+            _queueOfOutputMessages.Add(new OutputMessage(_outgoingMsgId, channel, text));
+            _outgoingMsgId++;
         }
 
         public void BeginProcessing(Bot bot)
