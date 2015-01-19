@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
+﻿using System.Text.RegularExpressions;
 using SlackBotRedux.Core.Models;
 
 namespace SlackBotRedux.Core
@@ -12,8 +7,9 @@ namespace SlackBotRedux.Core
     {
         public BotMessageType Type { get; set; }
         public bool IsFinishedBeingProcessed { get; set; }
+        public Match Match { get; set; }
 
-        public BotMessage(BotMessageType type)
+        protected BotMessage(BotMessageType type)
         {
             Type = type;
         }
@@ -28,6 +24,7 @@ namespace SlackBotRedux.Core
             TeamState = teamState;
         }
     }
+
     public class UpdateUserBotMessage : BotMessage
     {
         public User User { get; set; }
@@ -41,7 +38,6 @@ namespace SlackBotRedux.Core
     public class TextInputBotMessage : BotMessage
     {
         public InputMessage Message { get; set; }
-        public Match Match { get; set; }
 
         public TextInputBotMessage(InputMessage msg) : base(BotMessageType.TextInput)
         {
