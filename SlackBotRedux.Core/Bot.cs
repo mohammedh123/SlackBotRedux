@@ -1,31 +1,36 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using SlackBotRedux.Core.Listeners;
 using SlackBotRedux.Core.Models;
 
 namespace SlackBotRedux.Core
 {
-    public interface IBotRegistrar
+    public interface IBot
     {
+        ITeamState TeamState { get; }
+
         /// <summary>
         /// Adds a listener that listens for messages that match the regex exactly (as if the regex started with '^' and ended with '$'). It will only match for messages that occur after "botname: ", "@botname", etc, and is case insensitive.
         /// </summary>
-        void RespondTo(string regex, Action<BotMessage> callback);
-    }
+        void RespondTo(string regex, Action<Response> callback);
 
-    public class Bot : IBotRegistrar
+        void Send(string channel, string msg);
+    }
+    
+    public class Bot : IBot
     {
         private TeamState _teamState;
+        public ITeamState TeamState { get { return _teamState; }}
+
         private readonly IList<AbstractListener> _listeners;
         private readonly string _botName;
+        private readonly IMessageSender _pipeline;
 
         private static readonly string[] IllegalAnchors = { @"\A", @"\Z", @"\z" };
 
-        public Bot(string botName)
+        public Bot(string botName, IMessageSender pipeline)
         {
             _listeners = new List<AbstractListener>
             {
@@ -34,6 +39,7 @@ namespace SlackBotRedux.Core
             };
 
             _botName = botName;
+            _pipeline = pipeline;
         }
 
         public void ReceiveMessage(BotMessage msg)
@@ -66,7 +72,7 @@ namespace SlackBotRedux.Core
             }
         }
 
-        public void RespondTo(string regex, Action<BotMessage> callback)
+        public void RespondTo(string regex, Action<Response> callback)
         {
             if(regex.StartsWith("^")) throw new ArgumentException(String.Format("The supplied regex begins with the caret anchor; pass in a regex without one."));
             if(regex.EndsWith("$") && !regex.EndsWith(@"\$")) throw new ArgumentException(String.Format("The supplied regex ends with the dollar anchor; pass in a regex without one."));
@@ -81,13 +87,18 @@ namespace SlackBotRedux.Core
 
             _listeners.Add(new TextListener(finalRegex, callback));
         }
+
+        public void Send(string channel, string msg)
+        {
+            _pipeline.EnqueueOutputMessage(channel, msg);
+        }
     }
 
     internal class UpdateTeamListener : AbstractListener
     {
         public UpdateTeamListener(Bot bot)
-            : base(msg => msg is UpdateTeamBotMessage,
-            msg => ProcessMessage(bot, msg))
+            : base(bot, msg => msg is UpdateTeamBotMessage,
+            msg => ProcessMessage(bot, msg.Message))
         { }
 
         private static bool ProcessMessage(Bot bot, BotMessage msg)
@@ -102,8 +113,8 @@ namespace SlackBotRedux.Core
     internal class UpdateUserListener : AbstractListener
     {
         public UpdateUserListener(Bot bot)
-            : base(msg => msg is UpdateUserBotMessage,
-            msg => ProcessMessage(bot, msg))
+            : base(bot, msg => msg is UpdateUserBotMessage,
+            msg => ProcessMessage(bot, msg.Message))
         { }
 
         private static bool ProcessMessage(Bot bot, BotMessage msg)

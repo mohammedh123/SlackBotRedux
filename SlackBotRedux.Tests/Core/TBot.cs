@@ -2,6 +2,7 @@
 using System.Text.RegularExpressions;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 using SlackBotRedux.Core;
 using SlackBotRedux.Core.Models;
 
@@ -12,11 +13,13 @@ namespace SlackBotRedux.Tests.Core
     {
         protected Bot Subject;
         protected string BotName = "milkbot";
+        protected Mock<IMessageSender> MessageSender;
 
         [TestInitialize]
         public void InitializeSubject()
         {
-            Subject = new Bot(BotName);
+            MessageSender = new Mock<IMessageSender>();
+            Subject = new Bot(BotName, MessageSender.Object);
         }
 
         [TestClass]
@@ -77,7 +80,7 @@ namespace SlackBotRedux.Tests.Core
                 {
                     reactedTo = true;
 
-                    var textMsg = (TextInputBotMessage) msg;
+                    var textMsg = (TextInputBotMessage) msg.Message;
                     textMsg.Match.Should().NotBeNull();
                     textMsg.Match.Groups.Count.Should().Be(2);
                     textMsg.Match.Groups[1].Value.Should().Be("world");

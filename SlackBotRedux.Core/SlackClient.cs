@@ -66,7 +66,7 @@ namespace SlackBotRedux.Core
             _deserializer = new JsonDeserializer();
 
             var botName = ConfigurationManager.AppSettings["BotName"];
-            _bot = new Bot(botName);
+            _bot = new Bot(botName, _pipeline);
         }
 
         private void SetState(Status newStatus)
