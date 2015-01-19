@@ -7,7 +7,7 @@ namespace SlackBotRedux.Core.Listeners
     {
         private readonly Regex _regex;
 
-        public TextListener(Regex regex, Action<BotMessage> callback)
+        public TextListener(Regex regex, Action<Response> callback)
         {
             _regex = regex;
             Matcher = msg =>
@@ -16,10 +16,8 @@ namespace SlackBotRedux.Core.Listeners
                 if (tibm == null) return false;
 
                 var match = _regex.Match(tibm.Message.Text);
-                if (!match.Success) return false;
-                
                 tibm.Match = match;
-                return true;
+                return match.Success;
             };
             Callback = callback;
         }

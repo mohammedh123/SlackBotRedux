@@ -1,25 +1,29 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 
 namespace SlackBotRedux.Core.Listeners
 {
     public abstract class AbstractListener
     {
+        private readonly IBot _bot;
         protected Func<BotMessage, bool> Matcher;
-        protected Action<BotMessage> Callback;
+        protected Action<Response> Callback;
 
         protected AbstractListener()
         { }
 
-        protected AbstractListener(Func<BotMessage, bool> matcher, Action<BotMessage> callback)
+        protected AbstractListener(IBot bot, Func<BotMessage, bool> matcher, Action<Response> callback)
         {
+            _bot = bot;
             Matcher = matcher;
             Callback = callback;
         }
 
         public bool Listen(BotMessage msg)
         {
-            if (Matcher(msg)) {
-                Callback(msg);
+            var match = Matcher(msg);
+            if (match) {
+                Callback(new Response(_bot, msg, msg.Match));
 
                 return true;
             }
