@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using SlackBotRedux.Core.Models;
 
 namespace SlackBotRedux.Core
@@ -11,6 +9,7 @@ namespace SlackBotRedux.Core
     {
         User GetUserByUsername(string username);
         User GetUserByUserId(string userId);
+        void UpsertUser(string userId, User user);
     }
 
     /// <summary>
@@ -32,6 +31,16 @@ namespace SlackBotRedux.Core
             UsersById.TryGetValue(userId, out user);
 
             return user;
+        }
+
+        public void UpsertUser(string userId, User user)
+        {
+            if (UsersById.ContainsKey(user.Id)) {
+                UsersById[user.Id] = user;
+            }
+            else {
+                UsersById.Add(user.Id, user);
+            }
         }
     }
 }

@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using SlackBotRedux.Core.Listeners;
-using SlackBotRedux.Core.Models;
 
 namespace SlackBotRedux.Core
 {
     public interface IBot
     {
-        ITeamState TeamState { get; }
+        ITeamState TeamState { get; set; }
 
         /// <summary>
         /// Adds a listener that listens for messages that match the regex exactly (as if the regex started with '^' and ended with '$'). It will only match for messages that occur after "botname: ", "@botname", etc, and is case insensitive.
@@ -21,8 +20,7 @@ namespace SlackBotRedux.Core
     
     public class Bot : IBot
     {
-        private TeamState _teamState;
-        public ITeamState TeamState { get { return _teamState; }}
+        public ITeamState TeamState { get; set; }
 
         private readonly IList<AbstractListener> _listeners;
         private readonly string _botName;
@@ -56,22 +54,7 @@ namespace SlackBotRedux.Core
                 ReceiveMessage(new FallbackMessage(msg));
             }
         }
-
-        internal void UpdateTeamState(TeamState teamState)
-        {
-            _teamState = teamState;
-        }
-
-        internal void UpsertUserInTeamState(User user)
-        {
-            if (_teamState.UsersById.ContainsKey(user.Id)) {
-                _teamState.UsersById[user.Id] = user;
-            }
-            else {
-                _teamState.UsersById.Add(user.Id, user);
-            }
-        }
-
+        
         public void RespondTo(string regex, Action<Response> callback)
         {
             if(regex.StartsWith("^")) throw new ArgumentException(String.Format("The supplied regex begins with the caret anchor; pass in a regex without one."));
@@ -85,7 +68,7 @@ namespace SlackBotRedux.Core
             var newRegexPartTwo = regex + "$";
             var finalRegex = new Regex(newRegexPartOne + newRegexPartTwo, RegexOptions.IgnoreCase);
 
-            _listeners.Add(new TextListener(finalRegex, callback));
+            _listeners.Add(new TextListener(this, finalRegex, callback));
         }
 
         public void Send(string channel, string msg)
@@ -96,15 +79,15 @@ namespace SlackBotRedux.Core
 
     internal class UpdateTeamListener : AbstractListener
     {
-        public UpdateTeamListener(Bot bot)
+        public UpdateTeamListener(IBot bot)
             : base(bot, msg => msg is UpdateTeamBotMessage,
             msg => ProcessMessage(bot, msg.Message))
         { }
 
-        private static bool ProcessMessage(Bot bot, BotMessage msg)
+        private static bool ProcessMessage(IBot bot, BotMessage msg)
         {
             var updateTeamMsg = (UpdateTeamBotMessage)msg;
-            bot.UpdateTeamState(updateTeamMsg.TeamState);
+            bot.TeamState = updateTeamMsg.TeamState;
 
             return true;
         }
@@ -112,15 +95,15 @@ namespace SlackBotRedux.Core
 
     internal class UpdateUserListener : AbstractListener
     {
-        public UpdateUserListener(Bot bot)
+        public UpdateUserListener(IBot bot)
             : base(bot, msg => msg is UpdateUserBotMessage,
             msg => ProcessMessage(bot, msg.Message))
         { }
 
-        private static bool ProcessMessage(Bot bot, BotMessage msg)
+        private static bool ProcessMessage(IBot bot, BotMessage msg)
         {
             var updateUserMsg = (UpdateUserBotMessage)msg;
-            bot.UpsertUserInTeamState(updateUserMsg.User);
+            bot.TeamState.UpsertUser(updateUserMsg.User.Id, updateUserMsg.User);
 
             return true;
         }
