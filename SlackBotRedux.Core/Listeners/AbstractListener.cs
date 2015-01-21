@@ -9,12 +9,13 @@ namespace SlackBotRedux.Core.Listeners
         protected Func<BotMessage, bool> Matcher;
         protected Action<Response> Callback;
 
-        protected AbstractListener()
-        { }
-
-        protected AbstractListener(IBot bot, Func<BotMessage, bool> matcher, Action<Response> callback)
+        protected AbstractListener(IBot bot)
         {
             _bot = bot;
+        }
+
+        protected AbstractListener(IBot bot, Func<BotMessage, bool> matcher, Action<Response> callback) : this(bot)
+        {
             Matcher = matcher;
             Callback = callback;
         }
