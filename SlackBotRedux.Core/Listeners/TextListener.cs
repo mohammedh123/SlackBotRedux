@@ -7,7 +7,7 @@ namespace SlackBotRedux.Core.Listeners
     {
         private readonly Regex _regex;
 
-        public TextListener(Regex regex, Action<Response> callback)
+        public TextListener(IBot bot, Regex regex, Action<Response> callback) : base(bot)
         {
             _regex = regex;
             Matcher = msg =>
