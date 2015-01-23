@@ -61,13 +61,22 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="Core.Modules\TQuotesModule.cs" />
     <Compile Include="Core\TBot.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\SlackBotRedux.Core.Data\SlackBotRedux.Core.Data.csproj">
+      <Project>{02891D3F-4D21-4B63-A871-C0B4F9D038D0}</Project>
+      <Name>SlackBotRedux.Core.Data</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SlackBotRedux.Core.Models\SlackBotRedux.Core.Models.csproj">
       <Project>{106029E5-BBDC-4A03-B479-FED22679E0CB}</Project>
       <Name>SlackBotRedux.Core.Models</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SlackBotRedux.Core.Modules\SlackBotRedux.Core.Modules.csproj">
+      <Project>{4A888B0B-6805-40C2-8BD6-9F2A03A8423E}</Project>
+      <Name>SlackBotRedux.Core.Modules</Name>
     </ProjectReference>
     <ProjectReference Include="..\SlackBotRedux.Core\SlackBotRedux.Core.csproj">
       <Project>{19E36DF9-8A08-4AEE-A701-DBAE4B2D00CF}</Project>
