@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using System.Text.RegularExpressions;
 using SlackBotRedux.Core.Data;
 
 namespace SlackBotRedux.Core.Modules
@@ -18,14 +20,23 @@ namespace SlackBotRedux.Core.Modules
             {
                 var textMsg = (TextInputBotMessage)res.Message;
 
-                var username = textMsg.Match.Groups[1].Value;
-                var textToRemember = textMsg.Match.Groups[2];
+                var targetName = textMsg.Match.Groups[1].Value;
+                var textToRemember = textMsg.Match.Groups[2].Value;
 
-                var user = bot.TeamState.GetUserByUsername(username);
-                if (user == null)
-                {
-                    res.Send(ErrorMessages.NoUserExistsForUsername(username));
+                var targetUser = bot.TeamState.GetUserByUsername(targetName);
+                if (targetUser == null) {
+                    res.Send(ErrorMessages.NoUserExistsForUsername(textMsg.User.Name, targetName));
                     return;
+                }
+
+                if (String.Equals(textMsg.Message.User, targetUser.Id)) {
+                    res.Send(ErrorMessages.CantUseSelfAsTarget(textMsg.User.Name, "quote"));
+                    return;
+                }
+
+                var matchingMsg = _recentMsgRepository.GetRecentMessagesByUserId(targetUser.Id).FirstOrDefault(msg => msg.Text.Contains(textToRemember));
+                if (matchingMsg == null) {
+                    
                 }
             });
         }

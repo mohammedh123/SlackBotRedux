@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Text.RegularExpressions;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -25,15 +24,15 @@ namespace SlackBotRedux.Tests.Core
         [TestClass]
         public class RespondTo : TBot
         {
-            private void TestIfBotRespondsTo(string msgText, ref bool reactedTo, bool shouldWork = true)
+            private void TestIfBotRespondsTo(string msgText, ref bool reactedTo)
             {
-                Subject.ReceiveMessage(new TextInputBotMessage(new InputMessage { Text = msgText }));
+                Subject.ReceiveMessage(new TextInputBotMessage(new InputMessage { Text = msgText }, new User()));
                 reactedTo.Should().BeTrue();
             }
 
             private void TestIfBotDoesntRespondTo(string msgText, ref bool reactedTo)
             {
-                Subject.ReceiveMessage(new TextInputBotMessage(new InputMessage { Text = msgText }));
+                Subject.ReceiveMessage(new TextInputBotMessage(new InputMessage { Text = msgText }, new User()));
                 reactedTo.Should().BeFalse();
             }
 
@@ -87,8 +86,7 @@ namespace SlackBotRedux.Tests.Core
                 });
 
                 // Act+Verify
-                Subject.ReceiveMessage(new TextInputBotMessage(new InputMessage { Text = "milkbot, hello world" }));
-                reactedTo.Should().BeTrue();
+               TestIfBotRespondsTo("milkbot, hello world", ref reactedTo);
             }
 
             [TestMethod]
@@ -102,8 +100,7 @@ namespace SlackBotRedux.Tests.Core
                 });
 
                 // Act+Verify
-                Subject.ReceiveMessage(new TextInputBotMessage(new InputMessage { Text = "milkbot, hello world" }));
-                reactedTo.Should().BeFalse();
+                TestIfBotDoesntRespondTo("milkbot, hello world", ref reactedTo);
             }
 
             [TestMethod]

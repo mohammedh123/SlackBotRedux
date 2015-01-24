@@ -15,6 +15,7 @@ namespace SlackBotRedux.Tests.Core.Modules
         private const string BotName = "milkbot";
         protected QuotesModule Subject;
 
+        protected User DummyUser;
         protected Mock<IRecentMessageRepository> RecentMessageRepository;
         protected Mock<IBot> Bot;
         protected Mock<IMessageSender> MessageSender;
@@ -23,6 +24,11 @@ namespace SlackBotRedux.Tests.Core.Modules
         public virtual void InitializeMocks()
         {
             RecentMessageRepository = new Mock<IRecentMessageRepository>();
+
+            DummyUser = new User()
+            {
+                Name = "User"
+            };
         }
 
         public void InitializeSubject()
@@ -41,7 +47,18 @@ namespace SlackBotRedux.Tests.Core.Modules
                         .Setup(ts => ts.GetUserByUsername(It.IsAny<string>()))
                         .Returns((User) null));
 
-                MessageSender.Verify(ims => ims.EnqueueOutputMessage(It.IsAny<string>(), ErrorMessages.NoUserExistsForUsername("Kaladin")));
+                MessageSender.Verify(ims => ims.EnqueueOutputMessage(It.IsAny<string>(), ErrorMessages.NoUserExistsForUsername(DummyUser.Name, "Kaladin")));
+            }
+
+            [TestMethod]
+            public void ShouldRespondWithErrorBecauseOfSelfTarget()
+            {
+                TestRespondToWithMessage(String.Format("{0}, remember {1} storming", BotName, DummyUser.Name),
+                    mock => mock
+                        .Setup(ts => ts.GetUserByUsername(It.IsAny<string>()))
+                        .Returns(DummyUser));
+
+                MessageSender.Verify(ims => ims.EnqueueOutputMessage(It.IsAny<string>(), ErrorMessages.CantUseSelfAsTarget(DummyUser.Name, "quote")));
             }
 
             private void TestRespondToWithMessage(string msgText, Action<Mock<ITeamState>> teamStateSetupFunc )
@@ -53,7 +70,7 @@ namespace SlackBotRedux.Tests.Core.Modules
                 {
                     Channel = "somewhere",
                     Text = msgText
-                });
+                }, DummyUser);
 
                 // Act
                 var bot = new Bot(BotName, MessageSender.Object);
