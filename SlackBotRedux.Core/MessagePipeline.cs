@@ -69,7 +69,8 @@ namespace SlackBotRedux.Core
                 Logger.Trace("Processing input message; Text: {0}; Channel: {1}.", message.Text,
                     message.Channel);
 
-                bot.ReceiveMessage(new TextInputBotMessage(message));
+                var user = bot.TeamState.GetUserByUserId(message.User);
+                bot.ReceiveMessage(new TextInputBotMessage(message, user));
             }
         }
 

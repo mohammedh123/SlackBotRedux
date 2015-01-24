@@ -17,9 +17,9 @@ namespace SlackBotRedux.Core
 
     public class UpdateTeamBotMessage : BotMessage
     {
-        public TeamState TeamState { get; set; }
+        public ITeamState TeamState { get; set; }
 
-        public UpdateTeamBotMessage(TeamState teamState) : base(BotMessageType.UpdateTeam)
+        public UpdateTeamBotMessage(ITeamState teamState) : base(BotMessageType.UpdateTeam)
         {
             TeamState = teamState;
         }
@@ -38,10 +38,12 @@ namespace SlackBotRedux.Core
     public class TextInputBotMessage : BotMessage
     {
         public InputMessage Message { get; set; }
+        public User User { get; set; }
 
-        public TextInputBotMessage(InputMessage msg) : base(BotMessageType.TextInput)
+        public TextInputBotMessage(InputMessage msg, User user) : base(BotMessageType.TextInput)
         {
             Message = msg;
+            User = user;
         }
     }
 
