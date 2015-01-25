@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -27,6 +28,7 @@ namespace SlackBotRedux.Tests.Core.Modules
 
             DummyUser = new User()
             {
+                Id = "blah",
                 Name = "User"
             };
         }
@@ -61,6 +63,23 @@ namespace SlackBotRedux.Tests.Core.Modules
                 MessageSender.Verify(ims => ims.EnqueueOutputMessage(It.IsAny<string>(), ErrorMessages.CantUseSelfAsTarget(DummyUser.Name, "quote")));
             }
 
+            [TestMethod]
+            public void ShouldRespondWithErrorBecauseOfNoQuotesForUser()
+            {
+                var rememberTarget = new User() {Id = "gah", Name = "Jasnah"};
+
+                // Jasnah has not said anything containing "storming"
+                RecentMessageRepository.Setup(irmr => irmr.GetRecentMessagesByUserId(rememberTarget.Id))
+                                       .Returns<string>(id => new MessageList());
+
+                TestRespondToWithMessage(String.Format("{0}, remember {1} storming", BotName, rememberTarget.Name),
+                    mock => mock
+                        .Setup(ts => ts.GetUserByUsername(It.IsAny<string>()))
+                        .Returns(rememberTarget));
+
+                MessageSender.Verify(ims => ims.EnqueueOutputMessage(It.IsAny<string>(), ErrorMessages.NoQuotesForUser(DummyUser.Name, rememberTarget.Name, "storming")));
+            }
+
             private void TestRespondToWithMessage(string msgText, Action<Mock<ITeamState>> teamStateSetupFunc )
             {
                 // Setup
@@ -80,6 +99,14 @@ namespace SlackBotRedux.Tests.Core.Modules
 
                 Subject.RegisterToBot(bot);
                 bot.ReceiveMessage(msg);
+            }
+        }
+
+        private class MessageList : List<InputMessageSlim>
+        {
+            public void Add(string text)
+            {
+                Add(new InputMessageSlim() {Text = text});
             }
         }
     }

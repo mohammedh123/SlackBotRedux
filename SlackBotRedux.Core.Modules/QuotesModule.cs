@@ -36,7 +36,8 @@ namespace SlackBotRedux.Core.Modules
 
                 var matchingMsg = _recentMsgRepository.GetRecentMessagesByUserId(targetUser.Id).FirstOrDefault(msg => msg.Text.Contains(textToRemember));
                 if (matchingMsg == null) {
-                    
+                    res.Send(ErrorMessages.NoQuotesForUser(textMsg.User.Name, targetName, textToRemember));
+                    return;
                 }
             });
         }

@@ -13,5 +13,10 @@ namespace SlackBotRedux.Core
         {
             return String.Format("Sorry {0}, but you can't {1} yourself.", username, command);
         }
+
+        public static string NoQuotesForUser(string username, string quotedUser, string textToRemember)
+        {
+            return String.Format("Sorry {0}, but I don't remember what {1} said about \"{2}\".", username, quotedUser, textToRemember);
+        }
     }
 }
