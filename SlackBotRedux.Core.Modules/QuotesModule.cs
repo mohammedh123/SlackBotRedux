@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq;
-using SlackBotRedux.Core.Data.Interfaces;
+using SlackBotRedux.Data.Interfaces;
 
 namespace SlackBotRedux.Core.Modules
 {

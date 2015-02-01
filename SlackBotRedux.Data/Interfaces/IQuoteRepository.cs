@@ -1,6 +1,6 @@
 ﻿using SlackBotRedux.Core.Models;
 
-namespace SlackBotRedux.Core.Data.Interfaces
+namespace SlackBotRedux.Data.Interfaces
 {
     public interface IQuoteRepository
     {

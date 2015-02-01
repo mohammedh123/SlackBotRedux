@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Data;
 using Dapper.Contrib.Extensions;
-using SlackBotRedux.Core.Data.Interfaces;
 using SlackBotRedux.Core.Models;
+using SlackBotRedux.Data.Interfaces;
 
-namespace SlackBotRedux.Core.Data.Sql
+namespace SlackBotRedux.Data.Sql
 {
     public class QuoteRepository : IQuoteRepository
     {

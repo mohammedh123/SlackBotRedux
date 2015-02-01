@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using SlackBotRedux.Core.Models.Slack;
 
-namespace SlackBotRedux.Core.Data.Interfaces
+namespace SlackBotRedux.Data.Interfaces
 {
     public interface IRecentMessageRepository
     {

@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using SlackBotRedux.Core.Data.Interfaces;
 using SlackBotRedux.Core.Models.Slack;
+using SlackBotRedux.Data.Interfaces;
 
-namespace SlackBotRedux.Core.Data
+namespace SlackBotRedux.Data
 {
     public class InMemoryRecentMessageRepository : IRecentMessageRepository
     {

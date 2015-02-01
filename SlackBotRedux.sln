@@ -11,11 +11,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SlackBotRedux.Core.Models",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SlackBotRedux.Core.Modules", "SlackBotRedux.Core.Modules\SlackBotRedux.Core.Modules.csproj", "{4A888B0B-6805-40C2-8BD6-9F2A03A8423E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SlackBotRedux.Core.Data", "SlackBotRedux.Core.Data\SlackBotRedux.Core.Data.csproj", "{02891D3F-4D21-4B63-A871-C0B4F9D038D0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SlackBotRedux.Data", "SlackBotRedux.Data\SlackBotRedux.Data.csproj", "{02891D3F-4D21-4B63-A871-C0B4F9D038D0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SlackBotRedux.Tests", "SlackBotRedux.Tests\SlackBotRedux.Tests.csproj", "{79965783-A907-4196-B231-123DD38BF2C2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SlackBotRedux.Core.Data.Sql", "SlackBotRedux.Core.Data.Sql\SlackBotRedux.Core.Data.Sql.csproj", "{705CB286-3A77-4F87-B3CF-1A3E4D90919C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SlackBotRedux.Data.Sql", "SlackBotRedux.Data.Sql\SlackBotRedux.Data.Sql.csproj", "{705CB286-3A77-4F87-B3CF-1A3E4D90919C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

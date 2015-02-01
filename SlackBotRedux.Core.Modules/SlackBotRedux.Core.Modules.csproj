@@ -44,9 +44,9 @@
     <Compile Include="QuotesModule.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SlackBotRedux.Core.Data\SlackBotRedux.Core.Data.csproj">
+    <ProjectReference Include="..\SlackBotRedux.Data\SlackBotRedux.Data.csproj">
       <Project>{02891D3F-4D21-4B63-A871-C0B4F9D038D0}</Project>
-      <Name>SlackBotRedux.Core.Data</Name>
+      <Name>SlackBotRedux.Data</Name>
     </ProjectReference>
     <ProjectReference Include="..\SlackBotRedux.Core.Models\SlackBotRedux.Core.Models.csproj">
       <Project>{106029E5-BBDC-4A03-B479-FED22679E0CB}</Project>
