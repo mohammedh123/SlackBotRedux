@@ -15,10 +15,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SlackBotRedux.Core.Data", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SlackBotRedux.Tests", "SlackBotRedux.Tests\SlackBotRedux.Tests.csproj", "{79965783-A907-4196-B231-123DD38BF2C2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SlackBotRedux.Core.Data.Sql", "SlackBotRedux.Core.Data.Sql\SlackBotRedux.Core.Data.Sql.csproj", "{705CB286-3A77-4F87-B3CF-1A3E4D90919C}"
+EndProject
 Global
-	GlobalSection(CodealikeProperties) = postSolution
-		SolutionGuid = 4e40b2a7-eb28-490c-8ff5-9c46abf45240
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Development|Any CPU = Development|Any CPU
@@ -74,8 +73,19 @@ Global
 		{79965783-A907-4196-B231-123DD38BF2C2}.Production|Any CPU.Build.0 = Release|Any CPU
 		{79965783-A907-4196-B231-123DD38BF2C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{79965783-A907-4196-B231-123DD38BF2C2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{705CB286-3A77-4F87-B3CF-1A3E4D90919C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{705CB286-3A77-4F87-B3CF-1A3E4D90919C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{705CB286-3A77-4F87-B3CF-1A3E4D90919C}.Development|Any CPU.ActiveCfg = Debug|Any CPU
+		{705CB286-3A77-4F87-B3CF-1A3E4D90919C}.Development|Any CPU.Build.0 = Debug|Any CPU
+		{705CB286-3A77-4F87-B3CF-1A3E4D90919C}.Production|Any CPU.ActiveCfg = Release|Any CPU
+		{705CB286-3A77-4F87-B3CF-1A3E4D90919C}.Production|Any CPU.Build.0 = Release|Any CPU
+		{705CB286-3A77-4F87-B3CF-1A3E4D90919C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{705CB286-3A77-4F87-B3CF-1A3E4D90919C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(CodealikeProperties) = postSolution
+		SolutionGuid = 4e40b2a7-eb28-490c-8ff5-9c46abf45240
 	EndGlobalSection
 EndGlobal
