@@ -40,6 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Quote.cs" />
     <Compile Include="Slack\Attachment.cs" />
     <Compile Include="Slack\Channel.cs" />
     <Compile Include="Slack\DirectMessageChannel.cs" />
