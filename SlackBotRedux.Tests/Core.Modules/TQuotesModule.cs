@@ -19,6 +19,7 @@ namespace SlackBotRedux.Tests.Core.Modules
 
         protected User DummyUser;
         protected Mock<IRecentMessageRepository> RecentMessageRepository;
+        protected Mock<IQuoteRepository> QuoteRepository;
         protected Mock<IBot> Bot;
         protected Mock<IMessageSender> MessageSender;
 
@@ -26,6 +27,7 @@ namespace SlackBotRedux.Tests.Core.Modules
         public virtual void InitializeMocks()
         {
             RecentMessageRepository = new Mock<IRecentMessageRepository>();
+            QuoteRepository = new Mock<IQuoteRepository>();
 
             DummyUser = new User()
             {
@@ -36,7 +38,7 @@ namespace SlackBotRedux.Tests.Core.Modules
 
         public void InitializeSubject()
         {
-            Subject = new QuotesModule(RecentMessageRepository.Object);
+            Subject = new QuotesModule(RecentMessageRepository.Object, QuoteRepository.Object);
         }
 
         [TestClass]
@@ -67,7 +69,7 @@ namespace SlackBotRedux.Tests.Core.Modules
             [TestMethod]
             public void ShouldRespondWithErrorBecauseOfNoQuotesForUser()
             {
-                var rememberTarget = new User() {Id = "gah", Name = "Jasnah"};
+                var rememberTarget = new User() { Id = "gah", Name = "Jasnah" };
 
                 // Jasnah has not said anything containing "storming"
                 RecentMessageRepository.Setup(irmr => irmr.GetRecentMessagesByUserId(rememberTarget.Id))
@@ -81,6 +83,24 @@ namespace SlackBotRedux.Tests.Core.Modules
                 MessageSender.Verify(ims => ims.EnqueueOutputMessage(It.IsAny<string>(), ErrorMessages.NoQuotesForUser(DummyUser.Name, rememberTarget.Name, "storming")));
             }
 
+            [TestMethod]
+            public void ShouldRespondWithSuccess()
+            {
+                var rememberTarget = new User() { Id = "gah", Name = "Jasnah" };
+                var textIncludingStorming = "storming parshmen taking our jobs";
+
+                // Jasnah has said something containing "storming"
+                RecentMessageRepository.Setup(irmr => irmr.GetRecentMessagesByUserId(rememberTarget.Id))
+                                       .Returns<string>(id => new MessageList(){ textIncludingStorming });
+
+                TestRespondToWithMessage(String.Format("{0}, remember {1} storming", BotName, rememberTarget.Name),
+                    mock => mock
+                        .Setup(ts => ts.GetUserByUsername(It.IsAny<string>()))
+                        .Returns(rememberTarget));
+
+                MessageSender.Verify(ims => ims.EnqueueOutputMessage(It.IsAny<string>(), SuccessMessages.SuccessfulRemember(DummyUser.Name, textIncludingStorming)));
+            }
+
             private void TestRespondToWithMessage(string msgText, Action<Mock<ITeamState>> teamStateSetupFunc )
             {
                 // Setup
@@ -89,7 +109,8 @@ namespace SlackBotRedux.Tests.Core.Modules
                 var msg = new TextInputBotMessage(new InputMessage
                 {
                     Channel = "somewhere",
-                    Text = msgText
+                    Text = msgText,
+                    User = DummyUser.Id
                 }, DummyUser);
 
                 // Act
