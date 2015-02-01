@@ -1,4 +1,4 @@
-﻿namespace SlackBotRedux.Core.Models
+﻿namespace SlackBotRedux.Core.Models.Slack
 {
     public enum EventType
     {

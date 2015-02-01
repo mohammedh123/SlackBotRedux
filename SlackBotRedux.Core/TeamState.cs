@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using SlackBotRedux.Core.Models;
+using SlackBotRedux.Core.Models.Slack;
 
 namespace SlackBotRedux.Core
 {

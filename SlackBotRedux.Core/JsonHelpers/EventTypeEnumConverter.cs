@@ -2,7 +2,7 @@
 using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using SlackBotRedux.Core.Models;
+using SlackBotRedux.Core.Models.Slack;
 
 namespace SlackBotRedux.Core.JsonHelpers
 {

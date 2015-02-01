@@ -1,19 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SlackBotRedux.Core.Models;
+using SlackBotRedux.Core.Data.Interfaces;
+using SlackBotRedux.Core.Models.Slack;
 
 namespace SlackBotRedux.Core.Data
 {
-    public interface IRecentMessageRepository
-    {
-        void AddNewMessage(InputMessageSlim msg);
-
-        IEnumerable<InputMessageSlim> GetRecentMessagesByUserId(string userId);
-    }
-
     public class InMemoryRecentMessageRepository : IRecentMessageRepository
     {
         private readonly RecentMessageStore _msgStore;

@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using RestSharp;
 using RestSharp.Deserializers;
 using SlackBotRedux.Core;
-using SlackBotRedux.Core.Models;
 using SuperSocket.ClientEngine;
 using WebSocket4Net;
 

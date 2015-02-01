@@ -5,7 +5,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using SlackBotRedux.Core;
 using SlackBotRedux.Core.Data;
-using SlackBotRedux.Core.Models;
+using SlackBotRedux.Core.Models.Slack;
 using SlackBotRedux.Core.Modules;
 
 namespace SlackBotRedux.Tests.Core.Modules

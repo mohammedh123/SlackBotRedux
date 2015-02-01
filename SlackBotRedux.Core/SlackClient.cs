@@ -11,7 +11,7 @@ using NLog;
 using RestSharp;
 using RestSharp.Deserializers;
 using SlackBotRedux.Core.JsonHelpers;
-using SlackBotRedux.Core.Models;
+using SlackBotRedux.Core.Models.Slack;
 using SuperSocket.ClientEngine;
 using WebSocket4Net;
 

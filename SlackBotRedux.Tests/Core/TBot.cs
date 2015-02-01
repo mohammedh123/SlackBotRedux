@@ -3,7 +3,7 @@ using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using SlackBotRedux.Core;
-using SlackBotRedux.Core.Models;
+using SlackBotRedux.Core.Models.Slack;
 
 namespace SlackBotRedux.Tests.Core
 {

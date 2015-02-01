@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SlackBotRedux.Core.Models
+﻿namespace SlackBotRedux.Core.Models.Slack
 {
     /// <summary>
     /// Contains information about a Slack team member.

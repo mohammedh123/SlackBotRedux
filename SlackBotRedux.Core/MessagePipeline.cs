@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using NLog;
 using SlackBotRedux.Core.JsonHelpers;
-using SlackBotRedux.Core.Models;
+using SlackBotRedux.Core.Models.Slack;
 using WebSocket4Net;
 
 namespace SlackBotRedux.Core

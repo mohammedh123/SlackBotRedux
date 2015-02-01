@@ -1,5 +1,5 @@
 ﻿using System.Text.RegularExpressions;
-using SlackBotRedux.Core.Models;
+using SlackBotRedux.Core.Models.Slack;
 
 namespace SlackBotRedux.Core
 {
