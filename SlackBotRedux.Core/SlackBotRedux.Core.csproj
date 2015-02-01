@@ -72,6 +72,7 @@
     <Compile Include="Response.cs" />
     <Compile Include="SlackClient.cs" />
     <Compile Include="SlackConstants.cs" />
+    <Compile Include="SuccessMessages.cs" />
     <Compile Include="TeamState.cs" />
   </ItemGroup>
   <ItemGroup>
