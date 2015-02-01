@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Text.RegularExpressions;
-using SlackBotRedux.Core.Data;
+using SlackBotRedux.Core.Data.Interfaces;
 
 namespace SlackBotRedux.Core.Modules
 {
