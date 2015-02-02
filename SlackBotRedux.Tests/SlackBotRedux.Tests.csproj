@@ -112,7 +112,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="LocalTestDatabase.mdf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <Choose>
