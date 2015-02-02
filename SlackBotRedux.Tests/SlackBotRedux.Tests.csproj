@@ -35,12 +35,22 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Dapper">
+      <HintPath>..\packages\Dapper.1.38\lib\net45\Dapper.dll</HintPath>
+    </Reference>
     <Reference Include="FluentAssertions">
       <HintPath>..\packages\FluentAssertions.3.2.2\lib\net45\FluentAssertions.dll</HintPath>
     </Reference>
     <Reference Include="FluentAssertions.Core">
       <HintPath>..\packages\FluentAssertions.3.2.2\lib\net45\FluentAssertions.Core.dll</HintPath>
     </Reference>
+    <Reference Include="FluentMigrator">
+      <HintPath>..\packages\FluentMigrator.1.4.0.0\lib\40\FluentMigrator.dll</HintPath>
+    </Reference>
+    <Reference Include="FluentMigrator.Runner">
+      <HintPath>..\packages\FluentMigrator.Runner.1.4.0.0\lib\40\FluentMigrator.Runner.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="Moq">
       <HintPath>..\packages\Moq.4.2.1409.1722\lib\net40\Moq.dll</HintPath>
     </Reference>
@@ -70,6 +80,14 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\SlackBotRedux.Data.Sql\SlackBotRedux.Data.Sql.csproj">
+      <Project>{705CB286-3A77-4F87-B3CF-1A3E4D90919C}</Project>
+      <Name>SlackBotRedux.Data.Sql</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SlackBotRedux.DataMigrations\SlackBotRedux.DataMigrations.csproj">
+      <Project>{d76ebbf5-e830-4a60-92f8-1e1d0fdf592e}</Project>
+      <Name>SlackBotRedux.DataMigrations</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SlackBotRedux.Data\SlackBotRedux.Data.csproj">
       <Project>{02891D3F-4D21-4B63-A871-C0B4F9D038D0}</Project>
       <Name>SlackBotRedux.Data</Name>
@@ -88,6 +106,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
