@@ -42,6 +42,7 @@
     <Compile Include="IBotModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QuotesModule.cs" />
+    <Compile Include="VariablesModule.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SlackBotRedux.Data.Models\SlackBotRedux.Data.Models.csproj">

@@ -18,5 +18,10 @@ namespace SlackBotRedux.Core
         {
             return String.Format("Sorry {0}, but I don't remember what {1} said about \"{2}\".", username, quotedUser, textToRemember);
         }
+
+        public static string RedirectCreateVar(string username)
+        {
+            return String.Format("{0}: To create a variable, just start adding values to it.", username);
+        }
     }
 }
