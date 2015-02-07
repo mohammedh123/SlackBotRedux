@@ -53,6 +53,7 @@
     <Compile Include="Slack\SubMessages.cs" />
     <Compile Include="Slack\Topic.cs" />
     <Compile Include="Slack\User.cs" />
+    <Compile Include="VariableGroup.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
