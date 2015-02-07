@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace SlackBotRedux.Core.Models
 {
@@ -9,5 +10,7 @@ namespace SlackBotRedux.Core.Models
         public bool IsProtected { get; set; }
         public DateTimeOffset CreatedDate { get; set; }
         public DateTimeOffset LastModifiedDate { get; set; }
+
+        public IEnumerable<VariableGroup> Groups { get; set; }
     }
 }
