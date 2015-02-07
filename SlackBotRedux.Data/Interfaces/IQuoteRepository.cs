@@ -1,4 +1,4 @@
-﻿using SlackBotRedux.Core.Models;
+﻿using SlackBotRedux.Data.Models;
 
 namespace SlackBotRedux.Data.Interfaces
 {

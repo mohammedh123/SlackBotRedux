@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Data;
 using Dapper.Contrib.Extensions;
-using SlackBotRedux.Core.Models;
 using SlackBotRedux.Data.Interfaces;
+using SlackBotRedux.Data.Models;
 
 namespace SlackBotRedux.Data.Sql
 {

@@ -1,4 +1,4 @@
-﻿namespace SlackBotRedux.Core.Models
+﻿namespace SlackBotRedux.Data.Models
 {
     public class VariableGroup
     {

@@ -81,6 +81,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\SlackBotRedux.Data.Models\SlackBotRedux.Data.Models.csproj">
+      <Project>{0F6EEA28-E3F4-4752-975A-60157B13E030}</Project>
+      <Name>SlackBotRedux.Data.Models</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SlackBotRedux.Data.Sql\SlackBotRedux.Data.Sql.csproj">
       <Project>{705CB286-3A77-4F87-B3CF-1A3E4D90919C}</Project>
       <Name>SlackBotRedux.Data.Sql</Name>

@@ -2,7 +2,7 @@
 using Dapper;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SlackBotRedux.Core.Models;
+using SlackBotRedux.Data.Models;
 using SlackBotRedux.Data.Sql;
 
 namespace SlackBotRedux.Tests.Data.Sql

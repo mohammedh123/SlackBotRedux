@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace SlackBotRedux.Core.Models
+namespace SlackBotRedux.Data.Models
 {
     public class Variable
     {

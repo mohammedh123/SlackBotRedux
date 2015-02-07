@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SlackBotRedux.Core.Models
+namespace SlackBotRedux.Data.Models
 {
     public class Quote
     {
