@@ -9,7 +9,8 @@ namespace SlackBotRedux.DataMigrations.Migrations
         {
             Create.Table("VariableGroups")
                   .WithColumn("Id").AsInt32().PrimaryKey().Identity()
-                  .WithColumn("Name").AsString(50);
+                  .WithColumn("Name").AsString(50)
+                  .WithColumn("IsProtected").AsBoolean();
         }
     }
 }
