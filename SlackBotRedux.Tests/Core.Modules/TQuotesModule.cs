@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text.RegularExpressions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using SlackBotRedux.Core;
@@ -120,14 +118,6 @@ namespace SlackBotRedux.Tests.Core.Modules
 
                 Subject.RegisterToBot(bot);
                 bot.ReceiveMessage(msg);
-            }
-        }
-
-        private class MessageList : List<InputMessageSlim>
-        {
-            public void Add(string text)
-            {
-                Add(new InputMessageSlim() {Text = text});
             }
         }
     }

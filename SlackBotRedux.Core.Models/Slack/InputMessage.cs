@@ -55,6 +55,14 @@ namespace SlackBotRedux.Core.Models.Slack
         public string UserId { get; set; }
     }
 
+    public class MessageList : List<InputMessageSlim>
+    {
+        public void Add(string text)
+        {
+            Add(new InputMessageSlim() { Text = text });
+        }
+    }
+
     public enum MessageSubType
     {
         PlainMessage,
