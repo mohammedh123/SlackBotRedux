@@ -9,31 +9,19 @@ using SlackBotRedux.Data.Interfaces;
 namespace SlackBotRedux.Tests.Core.Modules
 {
     [TestClass]
-    public class TQuotesModule
+    public class TQuotesModule : ModuleTest<QuotesModule>
     {
-        private const string BotName = "milkbot";
-        protected QuotesModule Subject;
-
-        protected User DummyUser;
         protected Mock<IRecentMessageRepository> RecentMessageRepository;
         protected Mock<IQuoteRepository> QuoteRepository;
-        protected Mock<IBot> Bot;
-        protected Mock<IMessageSender> MessageSender;
 
         [TestInitialize]
         public virtual void InitializeMocks()
         {
             RecentMessageRepository = new Mock<IRecentMessageRepository>();
             QuoteRepository = new Mock<IQuoteRepository>();
-
-            DummyUser = new User()
-            {
-                Id = "blah",
-                Name = "User"
-            };
         }
 
-        public void InitializeSubject()
+        protected override void InitializeSubject()
         {
             Subject = new QuotesModule(RecentMessageRepository.Object, QuoteRepository.Object);
         }
@@ -44,7 +32,7 @@ namespace SlackBotRedux.Tests.Core.Modules
             [TestMethod]
             public void ShouldRespondWithErrorBecauseOfBadUsername()
             {
-                TestRespondToWithMessage(BotName + ", remember Kaladin storming",
+                TestRespondToWithMessage(BotName + ", remember Kaladin storming", _ => { },
                     mock => mock
                         .Setup(ts => ts.GetUserByUsername(It.IsAny<string>()))
                         .Returns((User) null));
@@ -55,7 +43,7 @@ namespace SlackBotRedux.Tests.Core.Modules
             [TestMethod]
             public void ShouldRespondWithErrorBecauseOfSelfTarget()
             {
-                TestRespondToWithMessage(String.Format("{0}, remember {1} storming", BotName, DummyUser.Name),
+                TestRespondToWithMessage(String.Format("{0}, remember {1} storming", BotName, DummyUser.Name), _ => { },
                     mock => mock
                         .Setup(ts => ts.GetUserByUsername(It.IsAny<string>()))
                         .Returns(DummyUser));
@@ -72,7 +60,7 @@ namespace SlackBotRedux.Tests.Core.Modules
                 RecentMessageRepository.Setup(irmr => irmr.GetRecentMessagesByUserId(rememberTarget.Id))
                                        .Returns<string>(id => new MessageList());
 
-                TestRespondToWithMessage(String.Format("{0}, remember {1} storming", BotName, rememberTarget.Name),
+                TestRespondToWithMessage(String.Format("{0}, remember {1} storming", BotName, rememberTarget.Name), _ => { },
                     mock => mock
                         .Setup(ts => ts.GetUserByUsername(It.IsAny<string>()))
                         .Returns(rememberTarget));
@@ -90,34 +78,12 @@ namespace SlackBotRedux.Tests.Core.Modules
                 RecentMessageRepository.Setup(irmr => irmr.GetRecentMessagesByUserId(rememberTarget.Id))
                                        .Returns<string>(id => new MessageList(){ textIncludingStorming });
 
-                TestRespondToWithMessage(String.Format("{0}, remember {1} storming", BotName, rememberTarget.Name),
+                TestRespondToWithMessage(String.Format("{0}, remember {1} storming", BotName, rememberTarget.Name), _ => { },
                     mock => mock
                         .Setup(ts => ts.GetUserByUsername(It.IsAny<string>()))
                         .Returns(rememberTarget));
 
                 MessageSender.Verify(ims => ims.EnqueueOutputMessage(It.IsAny<string>(), SuccessMessages.SuccessfulRemember(DummyUser.Name, textIncludingStorming)));
-            }
-
-            private void TestRespondToWithMessage(string msgText, Action<Mock<ITeamState>> teamStateSetupFunc )
-            {
-                // Setup
-                MessageSender = new Mock<IMessageSender>();
-                InitializeSubject();
-                var msg = new TextInputBotMessage(new InputMessage
-                {
-                    Channel = "somewhere",
-                    Text = msgText,
-                    User = DummyUser.Id
-                }, DummyUser);
-
-                // Act
-                var bot = new Bot(BotName, MessageSender.Object);
-                var mockTeamState = new Mock<ITeamState>();
-                teamStateSetupFunc(mockTeamState);
-                bot.TeamState = mockTeamState.Object;
-
-                Subject.RegisterToBot(bot);
-                bot.ReceiveMessage(msg);
             }
         }
     }
