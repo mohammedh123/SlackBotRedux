@@ -10,7 +10,5 @@ namespace SlackBotRedux.Data.Models
         public bool IsProtected { get; set; }
         public DateTimeOffset CreatedDate { get; set; }
         public DateTimeOffset LastModifiedDate { get; set; }
-
-        public IEnumerable<VariableGroup> Groups { get; set; }
     }
 }

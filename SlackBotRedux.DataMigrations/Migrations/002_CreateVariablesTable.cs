@@ -2,7 +2,7 @@
 
 namespace SlackBotRedux.DataMigrations.Migrations
 {
-    [Migration(003)]
+    [Migration(002)]
     public class CreateVariablesTable : AutoReversingMigration
     {
         public override void Up()
