@@ -1,18 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SlackBotRedux.Core.Modules
 {
     public class VariablesModule : IBotModule
     {
+        private const string AllowedVariableNameCharacters = @"[a-zA-Z0-9_-]";
+        private const string AllowedVariableValueCharacters = @".";
+
         public void RegisterToBot(IBot bot)
         {
-            bot.RespondTo(@"create var [a-zA-Z]+", res =>
+            bot.RespondTo(@"create var .+", res =>
             {
-                var textMsg = (TextInputBotMessage)res.Message;
+                var textMsg = (TextInputBotMessage) res.Message;
 
                 res.Send(ErrorMessages.RedirectCreateVar(textMsg.User.Name));
             });

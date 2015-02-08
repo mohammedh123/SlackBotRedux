@@ -76,6 +76,7 @@
   <ItemGroup>
     <Compile Include="Core.Modules\ModuleTest.cs" />
     <Compile Include="Core.Modules\TQuotesModule.cs" />
+    <Compile Include="Core.Modules\TVariablesModule.cs" />
     <Compile Include="Core\TBot.cs" />
     <Compile Include="Data.Sql\TQuoteRepository.cs" />
     <Compile Include="DatabaseTest.cs" />
