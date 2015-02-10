@@ -36,6 +36,7 @@
   <ItemGroup>
     <Compile Include="Interfaces\IQuoteRepository.cs" />
     <Compile Include="Interfaces\IRecentMessageRepository.cs" />
+    <Compile Include="Interfaces\IVariableRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="InMemoryRecentMessageRepository.cs" />
   </ItemGroup>

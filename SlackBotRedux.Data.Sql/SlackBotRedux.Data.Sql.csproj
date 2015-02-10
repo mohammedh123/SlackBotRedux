@@ -46,6 +46,7 @@
     <Compile Include="Dapper\SqlMapperExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QuoteRepository.cs" />
+    <Compile Include="VariableRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SlackBotRedux.Data.Models\SlackBotRedux.Data.Models.csproj">

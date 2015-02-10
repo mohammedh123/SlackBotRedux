@@ -79,6 +79,7 @@
     <Compile Include="Core.Modules\TVariablesModule.cs" />
     <Compile Include="Core\TBot.cs" />
     <Compile Include="Data.Sql\TQuoteRepository.cs" />
+    <Compile Include="Data.Sql\TVariableRepository.cs" />
     <Compile Include="DatabaseTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
