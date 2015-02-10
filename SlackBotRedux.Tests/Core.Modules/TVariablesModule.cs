@@ -23,7 +23,6 @@ namespace SlackBotRedux.Tests.Core.Modules
 
                 MessageSender.Verify(ims => ims.EnqueueOutputMessage(It.IsAny<string>(), ErrorMessages.RedirectCreateVar(DummyUser.Name)));
             }
-
         }
     }
 }

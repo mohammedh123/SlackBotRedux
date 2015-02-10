@@ -48,6 +48,7 @@
     <Compile Include="DataMigrator.cs" />
     <Compile Include="Migrations\002_CreateVariablesTable.cs" />
     <Compile Include="Migrations\001_CreateQuotesTable.cs" />
+    <Compile Include="Migrations\003_CreateVariableValuesTable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
