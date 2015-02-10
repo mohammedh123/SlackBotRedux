@@ -78,6 +78,14 @@ namespace SlackBotRedux.Tests.Data.Sql
                 Subject.ValidateAddingValue("vegetable", "$root")
                        .Should().Be(ValidateAddingValueResult.Success);
             }
+
+            [TestMethod]
+            public void ShouldReturnSuccessWhenAddingToVariableWithMatchingSubstring()
+            {
+                InsertNewVariableValue("food", "$vegetable").Should().Be(2);
+                Subject.ValidateAddingValue("vegetable", "$foodstuff")
+                       .Should().Be(ValidateAddingValueResult.Success);
+            }
         }
     }
 }
