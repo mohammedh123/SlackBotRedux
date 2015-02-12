@@ -87,5 +87,27 @@ namespace SlackBotRedux.Tests.Data.Sql
                        .Should().Be(ValidateAddingValueResult.Success);
             }
         }
+
+        [TestClass]
+        public class ValidateDeletingValue : TVariableRepository
+        {
+            [TestMethod]
+            public void ShouldReturnSuccessForValue()
+            {
+                InsertNewVariableValue("food", "vegetable").Should().Be(2);
+                Subject.ValidateDeletingValue("food", "vegetable")
+                       .Should().Be(ValidateDeletingValueResult.Success);
+            }
+
+            [TestMethod]
+            public void ShouldReturnRecursiveWhenTryingToRemoveValueThatResultsInRecursiveVariables()
+            {
+                InsertNewVariableValue("food", "$vegetable").Should().Be(2);
+                InsertNewVariableValue("vegetable", "onion").Should().Be(2);
+                InsertNewVariableValue("vegetable", "$food").Should().Be(1);
+                Subject.ValidateDeletingValue("vegetable", "onion")
+                       .Should().Be(ValidateDeletingValueResult.Recursive);
+            }
+        }
     }
 }
