@@ -15,6 +15,16 @@ namespace SlackBotRedux.Core.Modules
 
                 res.Send(ErrorMessages.RedirectCreateVar(textMsg.User.Name));
             });
+
+            var addValueRegex = String.Format(@"add value (?<Value>{0}+) (?<Name>{1}+)",
+                                              AllowedVariableValueCharacters,
+                                              AllowedVariableNameCharacters);
+            bot.RespondTo(addValueRegex, res =>
+            {
+                var textMsg = (TextInputBotMessage) res.Message;
+
+
+            });
         }
     }
 }
