@@ -59,7 +59,20 @@ namespace SlackBotRedux.Data.Sql
 
         public bool AddVariable(string variableName, bool isProtected)
         {
-            throw new NotImplementedException();
+            var result = _variableCache.AddVariable(variableName, isProtected);
+            if (!result) return false;
+
+            var now = DateTimeOffset.UtcNow;
+            var newVariable = new Variable()
+            {
+                CreatedDate = now,
+                IsProtected = isProtected,
+                Name = variableName,
+                LastModifiedDate = now
+            };
+            _conn.Insert(newVariable);
+
+            return true;
         }
         
         public VariableDefinition GetVariable(string variableName)
