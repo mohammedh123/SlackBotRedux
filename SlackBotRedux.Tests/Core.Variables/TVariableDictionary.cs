@@ -221,6 +221,13 @@ namespace SlackBotRedux.Tests.Core.Variables
             }
 
             [TestMethod]
+            public void ShouldReturnVariableIsProtectedForProtectedVariable()
+            {
+                Subject.AddVariable("food", true);
+                Subject.TryAddValue("food", "$vegetable").Should().Be(TryAddValueResult.VariableIsProtected);
+            }
+
+            [TestMethod]
             public void ShouldReturnAlreadyExistsForExistingValue()
             {
                 Subject.AddVariable("food").Should().Be(true);
@@ -320,7 +327,7 @@ namespace SlackBotRedux.Tests.Core.Variables
         }
 
         [TestClass]
-        public class TryDeleteValue : TVariableDictionary
+        public class TryRemoveValue : TVariableDictionary
         {
             [TestMethod]
             public void ShouldReturnVariableDoesNotExistForNonexistentVariable()
@@ -337,6 +344,15 @@ namespace SlackBotRedux.Tests.Core.Variables
                 Subject.TryRemoveValue("noun", "a").Should().Be(TryRemoveValueResult.ValueDoesNotExist);
 
                 Subject.GetVariable("noun").Values.Should().NotBeEmpty();
+            }
+
+            [TestMethod]
+            public void ShouldReturnVariableIsProtectedForProtectedVariable()
+            {
+                Subject.AddVariable("noun", true);
+                Subject.TryAddValue("noun", "b");
+
+                Subject.TryRemoveValue("noun", "b").Should().Be(TryRemoveValueResult.VariableIsProtected);
             }
 
             [TestMethod]
