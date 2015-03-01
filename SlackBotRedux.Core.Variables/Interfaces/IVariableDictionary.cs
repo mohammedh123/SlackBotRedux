@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace SlackBotRedux.Core.Variables.Interfaces
+namespace SlackBotRedux.Core.Variables
 {
     public enum TryAddValueResult
     {
@@ -18,8 +18,11 @@ namespace SlackBotRedux.Core.Variables.Interfaces
         VariableDoesNotExist,
         ValueDoesNotExist
     }
+}
 
-    interface IVariableDictionary
+namespace SlackBotRedux.Core.Variables.Interfaces
+{
+    public interface IVariableDictionary
     {
         /// <summary>
         /// Adds a variable.
