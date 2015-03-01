@@ -1,15 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using RestSharp;
-using RestSharp.Deserializers;
+﻿using Autofac;
+using SlackBotRedux.AutofacModules;
 using SlackBotRedux.Core;
-using SuperSocket.ClientEngine;
-using WebSocket4Net;
 
 namespace SlackBotRedux.ConsoleDriver
 {
@@ -17,8 +8,22 @@ namespace SlackBotRedux.ConsoleDriver
     {
         public static void Main(string[] args)
         {
-            var slackClient = new SlackClient(ConfigurationManager.AppSettings["BotApiToken"]);
-            slackClient.Start();
+            var containerBuilder = GetContainerBuilder();
+            var container = containerBuilder.Build();
+
+            using (var scope = container.BeginLifetimeScope()) {
+                var slackClient = scope.Resolve<ISlackClient>();
+                slackClient.Start();
+            }
+        }
+
+        private static ContainerBuilder GetContainerBuilder()
+        {
+            var containerBuilder = new ContainerBuilder();
+            containerBuilder.RegisterModule<SlackModule>();
+            containerBuilder.RegisterModule<BotConfigurationModule>();
+
+            return containerBuilder;
         }
     }
 }

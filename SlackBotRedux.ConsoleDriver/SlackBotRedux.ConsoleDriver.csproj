@@ -38,6 +38,9 @@
     <SlowCheetahTargets Condition=" '$(SlowCheetah_EnableImportFromNuGet)'=='true' and Exists('$(SlowCheetah_NuGetImportPath)') ">$(SlowCheetah_NuGetImportPath)</SlowCheetahTargets>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Autofac">
+      <HintPath>..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
+    </Reference>
     <Reference Include="NLog">
       <HintPath>..\packages\NLog.3.1.0.0\lib\net45\NLog.dll</HintPath>
     </Reference>
@@ -75,6 +78,10 @@
     <None Include="Properties\SlowCheetah\SlowCheetah.Transforms.targets" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\SlackBotRedux.AutofacModules\SlackBotRedux.AutofacModules.csproj">
+      <Project>{0774DCDB-F4C9-4D8E-8BA6-F3DBECCA5FFE}</Project>
+      <Name>SlackBotRedux.AutofacModules</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SlackBotRedux.Core.Models\SlackBotRedux.Core.Models.csproj">
       <Project>{106029E5-BBDC-4A03-B479-FED22679E0CB}</Project>
       <Name>SlackBotRedux.Core.Models</Name>
