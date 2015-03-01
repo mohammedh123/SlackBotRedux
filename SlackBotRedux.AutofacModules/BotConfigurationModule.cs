@@ -12,8 +12,8 @@ namespace SlackBotRedux.AutofacModules
             {
                 var settings = new BotConfiguration
                 {
-                    ApiToken = ConfigurationManager.AppSettings["BotApiToken"],
-                    Name = ConfigurationManager.AppSettings["BotName"]
+                    ApiToken = ConfigurationManager.AppSettings["Bot.ApiToken"],
+                    Name = ConfigurationManager.AppSettings["Bot.Name"]
                 };
 
                 return settings;
