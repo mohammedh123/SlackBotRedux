@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="BotConfigurationModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SlackModule.cs" />
     <Compile Include="VariableConfigurationModule.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -54,6 +55,10 @@
     <ProjectReference Include="..\SlackBotRedux.Configuration\SlackBotRedux.Configuration.csproj">
       <Project>{A3629534-539C-4B90-9187-7A19645CE62D}</Project>
       <Name>SlackBotRedux.Configuration</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SlackBotRedux.Core\SlackBotRedux.Core.csproj">
+      <Project>{19E36DF9-8A08-4AEE-A701-DBAE4B2D00CF}</Project>
+      <Name>SlackBotRedux.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
