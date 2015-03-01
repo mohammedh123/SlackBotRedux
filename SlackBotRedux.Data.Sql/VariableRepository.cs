@@ -86,17 +86,17 @@ namespace SlackBotRedux.Data.Sql
 
         public VariableDefinition GetVariable(string variableName)
         {
-            throw new NotImplementedException();
+            return _variableCache.GetVariable(variableName);
         }
 
         public string ResolveRandomValueForVariable(string variableName, Func<VariableDefinition, string> defaultValueFunc)
         {
-            throw new NotImplementedException();
+            return _variableCache.ResolveRandomValueForVariable(variableName, defaultValueFunc);
         }
 
         public IEnumerable<VariableDefinition> GetAllValuesForVariable(string variableName)
         {
-            throw new NotImplementedException();
+            return _variableCache.GetAllValuesForVariable(variableName);
         }
 
         public TryAddValueResult TryAddValue(string variableName, string value)
