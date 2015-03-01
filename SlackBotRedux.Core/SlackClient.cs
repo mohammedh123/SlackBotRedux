@@ -10,6 +10,7 @@ using Newtonsoft.Json.Linq;
 using NLog;
 using RestSharp;
 using RestSharp.Deserializers;
+using SlackBotRedux.Configuration;
 using SlackBotRedux.Core.JsonHelpers;
 using SlackBotRedux.Core.Models.Slack;
 using SuperSocket.ClientEngine;
@@ -58,15 +59,14 @@ namespace SlackBotRedux.Core
 
         private readonly Bot _bot;
 
-        public SlackClient(string slackBotApiToken)
+        public SlackClient(IBotConfiguration botConfig)
         {
             _waitEvent = new ManualResetEvent(false);
-            _slackBotApiToken = slackBotApiToken;
+            _slackBotApiToken = botConfig.ApiToken;
             _restClient = new RestClient(SlackConstants.SlackBaseApiUrl);
             _deserializer = new JsonDeserializer();
 
-            var botName = ConfigurationManager.AppSettings["BotName"];
-            _bot = new Bot(botName, _pipeline);
+            _bot = new Bot(botConfig.Name, _pipeline);
         }
 
         private void SetState(Status newStatus)
