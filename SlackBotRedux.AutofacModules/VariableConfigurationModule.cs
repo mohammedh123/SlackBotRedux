@@ -13,6 +13,7 @@ namespace SlackBotRedux.AutofacModules
                 var settings = new VariableConfiguration()
                 {
                     AllowedNameCharactersRegex = ConfigurationManager.AppSettings["Variable.AllowedNameCharactersRegex"],
+                    AllowedValueCharactersRegex = ConfigurationManager.AppSettings["Variable.AllowedValueCharactersRegex"],
                     InvalidNameCharactersRegex = ConfigurationManager.AppSettings["Variable.InvalidNameCharactersRegex"],
                     PrefixString = ConfigurationManager.AppSettings["Variable.PrefixString"]
                 };
