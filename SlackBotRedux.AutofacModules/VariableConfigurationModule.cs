@@ -17,7 +17,7 @@ namespace SlackBotRedux.AutofacModules
                 };
 
                 return settings;
-            }).SingleInstance();
+            }).SingleInstance().AsImplementedInterfaces();
         }
     }
 }
