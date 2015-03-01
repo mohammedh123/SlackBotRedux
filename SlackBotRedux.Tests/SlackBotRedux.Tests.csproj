@@ -80,10 +80,15 @@
     <Compile Include="Core.Variables\TVariableDictionary.cs" />
     <Compile Include="Core\TBot.cs" />
     <Compile Include="Data.Sql\TQuoteRepository.cs" />
+    <Compile Include="Data.Sql\TVariableRepository.cs" />
     <Compile Include="DatabaseTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\SlackBotRedux.Configuration\SlackBotRedux.Configuration.csproj">
+      <Project>{A3629534-539C-4B90-9187-7A19645CE62D}</Project>
+      <Name>SlackBotRedux.Configuration</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SlackBotRedux.Core.Variables\SlackBotRedux.Core.Variables.csproj">
       <Project>{2EA04097-1F72-4973-9D9D-CE016B20E7D2}</Project>
       <Name>SlackBotRedux.Core.Variables</Name>
