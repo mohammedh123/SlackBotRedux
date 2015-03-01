@@ -74,7 +74,16 @@ namespace SlackBotRedux.Data.Sql
 
             return true;
         }
-        
+
+        public bool DeleteVariable(string variableName, bool overrideProtection)
+        {
+            var result = _variableCache.DeleteVariable(variableName, overrideProtection);
+            if (!result) return false;
+
+            const string sql = @"DELETE dbo.Variables WHERE Name = @variableName";
+            return _conn.Execute(sql, new {variableName}) != 0;
+        }
+
         public VariableDefinition GetVariable(string variableName)
         {
             throw new NotImplementedException();
