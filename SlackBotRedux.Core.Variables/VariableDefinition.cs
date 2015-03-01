@@ -4,6 +4,7 @@ using System.Linq;
 
 namespace SlackBotRedux.Core.Variables
 {
+    // todo: this class is sort of a mess because of the constraints of quickgraph...unmess it
     public class VariableDefinition
     {
         private readonly string _value;
