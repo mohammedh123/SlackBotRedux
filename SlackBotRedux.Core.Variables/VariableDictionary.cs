@@ -29,15 +29,34 @@ namespace SlackBotRedux.Core.Variables
             _graph = new VariableGraph();
         }
 
-        public bool AddVariable(string variableName, bool isProtected = false)
+        private string GetPrefixedVariableName(string variableName)
         {
             if (!variableName.StartsWith(_variablePrefix)) variableName = _variablePrefix + variableName;
+
+            return variableName;
+        }
+
+        public bool AddVariable(string variableName, bool isProtected = false)
+        {
+            variableName = GetPrefixedVariableName(variableName);
             if (_variables.ContainsKey(variableName)) return false;
 
             var newVar = new VariableDefinition(variableName, true, isProtected);
 
             _variables.Add(variableName, newVar);
             _graph.AddVertex(newVar);
+
+            return true;
+        }
+
+        public bool DeleteVariable(string variableName, bool overrideProtection)
+        {
+            var varDef = GetVariable(variableName);
+            if (varDef == null) return false;
+            if (!overrideProtection && varDef.IsProtected) return false;
+
+            _variables.Remove(GetPrefixedVariableName(variableName));
+            _graph.RemoveVertex(varDef);
 
             return true;
         }
@@ -169,18 +188,22 @@ namespace SlackBotRedux.Core.Variables
         public TryAddValueResult TryAddValue(string variableName, string value)
         {
             var existingVariable = GetVariable(variableName);
-            if (existingVariable == null) return TryAddValueResult.VariableDoesNotExist;
-            if (existingVariable.IsProtected) return TryAddValueResult.VariableIsProtected;
-            if (existingVariable.Values.FirstOrDefault(v => v.Value == value) != null) return TryAddValueResult.ValueAlreadyExists;
+            if (existingVariable == null) return new TryAddValueResult(TryAddValueResultEnum.VariableDoesNotExist);
+            if (existingVariable.IsProtected) return new TryAddValueResult(TryAddValueResultEnum.VariableIsProtected);
+            if (existingVariable.Values.FirstOrDefault(v => v.Value == value) != null) return new TryAddValueResult(TryAddValueResultEnum.ValueAlreadyExists);
 
             var variablesReferenced = new HashSet<VariableDefinition>();
             var matches = _variableReferencesRegex.Matches(value);
+            var newlyCreatedVariables = new List<VariableDefinition>();
             var isValueActuallyVariable = false;
             foreach (Match match in matches) {
                 if (match.Value == value) isValueActuallyVariable = true;
 
                 var referencedVarName = match.Groups["VariableNames"].Value;
-                AddVariable(referencedVarName, false);
+                if (AddVariable(referencedVarName, false)) {
+                    newlyCreatedVariables.Add(_variables[referencedVarName]);
+                }
+
                 variablesReferenced.Add(_variables[referencedVarName]);
             }
 
@@ -194,7 +217,7 @@ namespace SlackBotRedux.Core.Variables
             _graph.AddVerticesAndEdge(new SEdge<VariableDefinition>(existingVariable, valueDef));
             _graph.AddVerticesAndEdgeRange(variablesReferenced.Where(vd => vd != valueDef).Select(vd => new SEdge<VariableDefinition>(valueDef, vd)));
 
-            return TryAddValueResult.Success;
+            return new TryAddValueResult(TryAddValueResultEnum.Success, newlyCreatedVariables);
         }
 
         public TryRemoveValueResult TryRemoveValue(string variableName, string value)

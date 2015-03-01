@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SlackBotRedux.Core.Variables
 {
-    public enum TryAddValueResult
+    public enum TryAddValueResultEnum
     {
         Success,
 
@@ -20,6 +21,19 @@ namespace SlackBotRedux.Core.Variables
         ValueDoesNotExist,
         VariableIsProtected
     }
+    
+    public class TryAddValueResult
+    {
+        public TryAddValueResultEnum Result { get; set; }
+
+        public IEnumerable<VariableDefinition> NewlyCreatedVariables { get; set; }
+
+        public TryAddValueResult(TryAddValueResultEnum result, IEnumerable<VariableDefinition> newlyCreatedVariables = null)
+        {
+            Result = result;
+            NewlyCreatedVariables = newlyCreatedVariables ?? Enumerable.Empty<VariableDefinition>();
+        }
+    }
 }
 
 namespace SlackBotRedux.Core.Variables.Interfaces
@@ -31,6 +45,12 @@ namespace SlackBotRedux.Core.Variables.Interfaces
         /// </summary>
         /// <returns><b>true</b> if the variable was added; <b>false</b> if the variable already existed</returns>
         bool AddVariable(string variableName, bool isProtected);
+
+        /// <summary>
+        /// Deletes a variable.
+        /// </summary>
+        /// <returns><b>true</b> if the variable was deleted; <b>false</b> otherwise</returns>
+        bool DeleteVariable(string variableName, bool overrideProtection);
 
         VariableDefinition GetVariable(string variableName);
 
