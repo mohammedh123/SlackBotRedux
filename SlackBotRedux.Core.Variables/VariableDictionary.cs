@@ -29,12 +29,12 @@ namespace SlackBotRedux.Core.Variables
             _graph = new VariableGraph();
         }
 
-        public bool AddVariable(string variableName)
+        public bool AddVariable(string variableName, bool isProtected = false)
         {
             if (!variableName.StartsWith(_variablePrefix)) variableName = _variablePrefix + variableName;
             if (_variables.ContainsKey(variableName)) return false;
 
-            var newVar = new VariableDefinition(variableName, true);
+            var newVar = new VariableDefinition(variableName, true, isProtected);
 
             _variables.Add(variableName, newVar);
             _graph.AddVertex(newVar);
@@ -64,28 +64,28 @@ namespace SlackBotRedux.Core.Variables
             return ResolveRandomValueForVariableImpl(varDef, defaultValueFunc, condensedGraph, new HashSet<VariableDefinition>(), new HashSet<VariableGraph>()) ?? defaultValueFunc(varDef);
         }
 
-        private string ResolveRandomValueForVariableImpl(VariableDefinition varDef, Func<VariableDefinition, string> defaultValueFunc, IVertexListGraph<VariableGraph, CondensedEdge<VariableDefinition, SEdge<VariableDefinition>, VariableGraph>> condensedGraph, HashSet<VariableDefinition> seenVariadicValues, HashSet<VariableGraph> exhaustedSccs)
+        private string ResolveRandomValueForVariableImpl(VariableDefinition varDef,
+            Func<VariableDefinition, string> defaultValueFunc,
+            IVertexListGraph<VariableGraph, CondensedEdge<VariableDefinition, SEdge<VariableDefinition>, VariableGraph>>
+                condensedGraph, HashSet<VariableDefinition> seenVariadicValues, HashSet<VariableGraph> exhaustedSccs)
         {
             var containingSubgraph = condensedGraph.Vertices.Single(subgraph => subgraph.ContainsVertex(varDef));
 
             // if its a variadic value, add it to the seen list
             if (varDef.VariablesReferenced.Any()) seenVariadicValues.Add(varDef);
 
-            if (varDef.IsVariable)
-            {
+            if (varDef.IsVariable) {
                 string currentValue = null;
 
-                while (currentValue == null)
-                {
+                while (currentValue == null) {
                     // pick a random value to use from the possible list of values
                     // or if no more available values, try to get a random element from the scc
                     var variableToUse = GetRandomUnusedValue(varDef, seenVariadicValues) ??
-                                        GetRandomUnusedValue((VariableGraph) containingSubgraph, seenVariadicValues);
+                                        GetRandomUnusedValue(containingSubgraph, seenVariadicValues);
 
                     // something special here -- if null is returned, then that scc is exhausted of all possible values
                     // mark it down and try to get an unseen value from the scc's out-edges
-                    if (variableToUse == null)
-                    {
+                    if (variableToUse == null) {
                         exhaustedSccs.Add(containingSubgraph);
                         var value = ResolveRandomVariableFromOutEdges(defaultValueFunc, condensedGraph,
                                                                       containingSubgraph,
@@ -96,17 +96,15 @@ namespace SlackBotRedux.Core.Variables
                     }
 
                     currentValue = ResolveRandomValueForVariableImpl(variableToUse, defaultValueFunc, condensedGraph,
-                                                                         seenVariadicValues, exhaustedSccs);
+                                                                     seenVariadicValues, exhaustedSccs);
                 }
 
                 return currentValue;
             }
-            else if (varDef.VariablesReferenced.Any())
-            {
+            else if (varDef.VariablesReferenced.Any()) {
                 var currentValue = varDef.Value;
 
-                foreach (var referencedVar in varDef.VariablesReferenced)
-                {
+                foreach (var referencedVar in varDef.VariablesReferenced) {
                     var replacementValue = ResolveRandomValueForVariableImpl(referencedVar, defaultValueFunc,
                                                                              condensedGraph,
                                                                              seenVariadicValues, exhaustedSccs);
@@ -116,8 +114,7 @@ namespace SlackBotRedux.Core.Variables
 
                 return currentValue;
             }
-            else
-            {
+            else {
                 // a vanilla value
                 return varDef.Value;
             }
@@ -133,7 +130,7 @@ namespace SlackBotRedux.Core.Variables
 
         private VariableDefinition GetRandomUnusedValue(VariableGraph scc, IEnumerable<VariableDefinition> seenVariadicValues)
         {
-            var availableValues = Enumerable.Except(scc.Vertices, seenVariadicValues).ToList();
+            var availableValues = scc.Vertices.Except(seenVariadicValues).ToList();
             if (!availableValues.Any()) return null;
 
             return availableValues[StaticRandom.Next(0, availableValues.Count)];
@@ -149,13 +146,12 @@ namespace SlackBotRedux.Core.Variables
 
             string value = null;
 
-            while (value == null)
-            {
+            while (value == null) {
                 var outEdges = condensedGraph.OutEdges(scc).Where(edge => !exhaustedSccs.Contains(edge.Target)).ToList();
                 if (!outEdges.Any()) return null;
 
                 var randomOutEdge = outEdges[StaticRandom.Next(0, outEdges.Count)];
-                var randomVarFromScc = GetRandomUnusedValue((VariableGraph) randomOutEdge.Target, seenVariadicValues);
+                var randomVarFromScc = GetRandomUnusedValue(randomOutEdge.Target, seenVariadicValues);
 
                 value = ResolveRandomValueForVariableImpl(randomVarFromScc, defaultValueFunc, condensedGraph,
                                                           seenVariadicValues, exhaustedSccs);
@@ -174,17 +170,17 @@ namespace SlackBotRedux.Core.Variables
         {
             var existingVariable = GetVariable(variableName);
             if (existingVariable == null) return TryAddValueResult.VariableDoesNotExist;
+            if (existingVariable.IsProtected) return TryAddValueResult.VariableIsProtected;
             if (existingVariable.Values.FirstOrDefault(v => v.Value == value) != null) return TryAddValueResult.ValueAlreadyExists;
 
             var variablesReferenced = new HashSet<VariableDefinition>();
             var matches = _variableReferencesRegex.Matches(value);
             var isValueActuallyVariable = false;
-            foreach (Match match in matches)
-            {
+            foreach (Match match in matches) {
                 if (match.Value == value) isValueActuallyVariable = true;
 
                 var referencedVarName = match.Groups["VariableNames"].Value;
-                AddVariable(referencedVarName);
+                AddVariable(referencedVarName, false);
                 variablesReferenced.Add(_variables[referencedVarName]);
             }
 
@@ -205,21 +201,29 @@ namespace SlackBotRedux.Core.Variables
         {
             var existingVariable = GetVariable(variableName);
             if (existingVariable == null) return TryRemoveValueResult.VariableDoesNotExist;
+            if (existingVariable.IsProtected) return TryRemoveValueResult.VariableIsProtected;
 
             var existingValue = existingVariable.RemoveValue(value);
             if (existingValue == null) return TryRemoveValueResult.ValueDoesNotExist;
 
             // variables can have other stuff pointing to them in the graph, so we cant just remove the vertex
-            if (existingValue.IsVariable)
-            {
+            if (existingValue.IsVariable) {
                 _graph.RemoveEdge(new SEdge<VariableDefinition>(existingVariable, existingValue));
             }
-            else
-            {
+            else {
                 _graph.RemoveVertex(existingValue);
             }
 
             return TryRemoveValueResult.Success;
+        }
+
+        public bool SetVariableProtection(string variableName, bool isProtected)
+        {
+            var existingVariable = GetVariable(variableName);
+            if (existingVariable == null) return false;
+
+            existingVariable.IsProtected = isProtected;
+            return true;
         }
     }
 }

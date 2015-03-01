@@ -9,19 +9,21 @@ namespace SlackBotRedux.Core.Variables
         private readonly string _value;
         public string Value { get { return _value; } }
 
-        public bool IsVariable { get; set; }
+        public bool IsVariable { get; private set; }
+        public bool IsProtected { get; internal set; }
 
         internal readonly List<VariableDefinition> _values;
         public IEnumerable<VariableDefinition> Values { get { return _values; } }
 
         internal HashSet<VariableDefinition> VariablesReferenced { get; set; }
 
-        public VariableDefinition(string value, bool isVariable)
+        public VariableDefinition(string value, bool isVariable, bool isProtected = false)
         {
             _value = value;
             _values = new List<VariableDefinition>();
 
             IsVariable = isVariable;
+            IsProtected = isProtected;
             VariablesReferenced = new HashSet<VariableDefinition>();
         }
 

@@ -8,7 +8,8 @@ namespace SlackBotRedux.Core.Variables
         Success,
 
         VariableDoesNotExist,
-        ValueAlreadyExists
+        ValueAlreadyExists,
+        VariableIsProtected
     }
 
     public enum TryRemoveValueResult
@@ -16,7 +17,8 @@ namespace SlackBotRedux.Core.Variables
         Success,
 
         VariableDoesNotExist,
-        ValueDoesNotExist
+        ValueDoesNotExist,
+        VariableIsProtected
     }
 }
 
@@ -28,7 +30,7 @@ namespace SlackBotRedux.Core.Variables.Interfaces
         /// Adds a variable.
         /// </summary>
         /// <returns><b>true</b> if the variable was added; <b>false</b> if the variable already existed</returns>
-        bool AddVariable(string variableName);
+        bool AddVariable(string variableName, bool isProtected);
 
         VariableDefinition GetVariable(string variableName);
 
@@ -55,5 +57,11 @@ namespace SlackBotRedux.Core.Variables.Interfaces
         /// Attempts to remove a value from a variable.
         /// </summary>
         TryRemoveValueResult TryRemoveValue(string variableName, string value);
+
+        /// <summary>
+        /// Sets the protection status of a variable.
+        /// </summary>
+        /// <returns><b>true</b> if the variable exists; <b>false</b> otherwise</returns>
+        bool SetVariableProtection(string variableName, bool isProtected);
     }
 }
