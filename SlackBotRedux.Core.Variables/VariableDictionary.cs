@@ -38,6 +38,7 @@ namespace SlackBotRedux.Core.Variables
 
         public bool AddVariable(string variableName, bool isProtected = false)
         {
+            // TODO: add check for allowed characters
             variableName = GetPrefixedVariableName(variableName);
             if (_variables.ContainsKey(variableName)) return false;
 
