@@ -14,18 +14,18 @@ namespace SlackBotRedux.Core.Variables
     public class VariableDictionary : IVariableDictionary
     {
         private readonly string _variablePrefix;
-        private readonly string _allowedVariableNameCharacters;
         private readonly Dictionary<string, VariableDefinition> _variables;
         private readonly VariableGraph _graph;
 
         private readonly Regex _variableReferencesRegex;
+        private readonly Regex _invalidCharacterRegex;
 
-        public VariableDictionary(string variablePrefix, string allowedVariableNameCharacters)
+        public VariableDictionary(string variablePrefix, string allowedVariableNameCharacters, string invalidVariableNameCharacters)
         {
             _variablePrefix = variablePrefix;
-            _allowedVariableNameCharacters = allowedVariableNameCharacters;
             _variables = new Dictionary<string, VariableDefinition>();
-            _variableReferencesRegex = new Regex(String.Format(@"(?<VariableNames>{0}{1}+)", Regex.Escape(variablePrefix), _allowedVariableNameCharacters), RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            _variableReferencesRegex = new Regex(String.Format(@"(?<VariableNames>{0}{1}+)", Regex.Escape(variablePrefix), allowedVariableNameCharacters), RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            _invalidCharacterRegex = new Regex(String.Format(@"{0}+", invalidVariableNameCharacters), RegexOptions.Compiled);
             _graph = new VariableGraph();
         }
 
@@ -36,18 +36,28 @@ namespace SlackBotRedux.Core.Variables
             return variableName;
         }
 
-        public bool AddVariable(string variableName, bool isProtected = false)
+        private string StripPrefix(string variableName)
         {
-            // TODO: add check for allowed characters
+            if (variableName.StartsWith(_variablePrefix))
+                variableName = variableName.Substring(_variablePrefix.Length);
+
+            return variableName;
+        }
+        
+        public AddVariableResult AddVariable(string variableName, bool isProtected = false)
+        {
+            var strippedName = StripPrefix(variableName);
+            if (_invalidCharacterRegex.IsMatch(strippedName)) return AddVariableResult.InvalidVariableName;
+
             variableName = GetPrefixedVariableName(variableName);
-            if (_variables.ContainsKey(variableName)) return false;
+            if (_variables.ContainsKey(variableName)) return AddVariableResult.VariableAlreadyExists;
 
             var newVar = new VariableDefinition(variableName, true, isProtected);
 
             _variables.Add(variableName, newVar);
             _graph.AddVertex(newVar);
 
-            return true;
+            return AddVariableResult.Success;
         }
 
         public bool DeleteVariable(string variableName, bool overrideProtection)
@@ -201,10 +211,13 @@ namespace SlackBotRedux.Core.Variables
                 if (match.Value == value) isValueActuallyVariable = true;
 
                 var referencedVarName = match.Groups["VariableNames"].Value;
-                if (AddVariable(referencedVarName, false)) {
+
+                var result = AddVariable(referencedVarName, false);
+                if (result == AddVariableResult.Success) {
                     newlyCreatedVariables.Add(_variables[referencedVarName]);
                 }
-
+                else if (result == AddVariableResult.InvalidVariableName) continue;
+                
                 variablesReferenced.Add(_variables[referencedVarName]);
             }
 

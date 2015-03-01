@@ -4,6 +4,7 @@ using Dapper;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SlackBotRedux.Configuration;
+using SlackBotRedux.Core.Variables;
 using SlackBotRedux.Data.Models;
 using SlackBotRedux.Data.Sql;
 
@@ -17,7 +18,7 @@ namespace SlackBotRedux.Tests.Data.Sql
         [TestInitialize]
         public void InitializeSubject()
         {
-            Subject = new VariableRepository(Connection, new VariableConfiguration() { AllowedNameCharactersRegex = "[a-zA-z-_]", PrefixString = "$"});
+            Subject = new VariableRepository(Connection, new VariableConfiguration() { AllowedNameCharactersRegex = "[a-zA-Z-_]", PrefixString = "$", InvalidNameCharactersRegex = "[^a-zA-Z-_]"});
         }
 
         [TestClass]
@@ -26,10 +27,10 @@ namespace SlackBotRedux.Tests.Data.Sql
             [TestMethod]
             public void ShouldLoadVariableDataUponConstruction()
             {
-                Subject.AddVariable("a", false);
-                Subject.AddVariable("b", false);
-                Subject.TryAddValue("a", "bah");
-                Subject.TryAddValue("b", "$a");
+                Subject.AddVariable("a", false).Should().Be(AddVariableResult.Success);
+                Subject.AddVariable("b", false).Should().Be(AddVariableResult.Success);
+                Subject.TryAddValue("a", "bah").Result.Should().Be(TryAddValueResultEnum.Success);
+                Subject.TryAddValue("b", "$a").Result.Should().Be(TryAddValueResultEnum.Success);
 
                 InitializeSubject();
 
@@ -52,7 +53,7 @@ namespace SlackBotRedux.Tests.Data.Sql
             [TestMethod]
             public void ShouldPersistNewVariableInDatabase()
             {
-                Subject.AddVariable("noun", false);
+                Subject.AddVariable("noun", false).Should().Be(AddVariableResult.Success);
 
                 var record = Connection.Query<Variable>("SELECT * FROM dbo.Variables").SingleOrDefault();
                 record.Should().NotBeNull();
@@ -68,8 +69,8 @@ namespace SlackBotRedux.Tests.Data.Sql
             [TestMethod]
             public void ShouldDeleteVariableAndAllValuesFromDatabase()
             {
-                Subject.AddVariable("a", false);
-                Subject.TryAddValue("a", "bah");
+                Subject.AddVariable("a", false).Should().Be(AddVariableResult.Success);
+                Subject.TryAddValue("a", "bah").Result.Should().Be(TryAddValueResultEnum.Success);
 
                 Subject.DeleteVariable("a", true);
 
@@ -84,9 +85,9 @@ namespace SlackBotRedux.Tests.Data.Sql
             [TestMethod]
             public void ShouldPersistNewValueInDatabase()
             {
-                Subject.AddVariable("noun", false);
+                Subject.AddVariable("noun", false).Should().Be(AddVariableResult.Success);
 
-                Subject.TryAddValue("noun", "test");
+                Subject.TryAddValue("noun", "test").Result.Should().Be(TryAddValueResultEnum.Success);
 
                 Connection.Query<VariableValue>("SELECT * FROM dbo.VariableValues")
                           .Should()
@@ -96,9 +97,9 @@ namespace SlackBotRedux.Tests.Data.Sql
             [TestMethod]
             public void ShouldAddVariablesReferencedIfTheyDontExist()
             {
-                Subject.AddVariable("noun", false);
+                Subject.AddVariable("noun", false).Should().Be(AddVariableResult.Success);
 
-                Subject.TryAddValue("noun", "$vegetable");
+                Subject.TryAddValue("noun", "$vegetable").Result.Should().Be(TryAddValueResultEnum.Success);
 
                 Connection.Query<VariableValue>("SELECT * FROM dbo.VariableValues")
                           .Should()
@@ -114,8 +115,8 @@ namespace SlackBotRedux.Tests.Data.Sql
             [TestMethod]
             public void ShouldRemoveValueFromDatabase()
             {
-                Subject.AddVariable("noun", false);
-                Subject.TryAddValue("noun", "book");
+                Subject.AddVariable("noun", false).Should().Be(AddVariableResult.Success);
+                Subject.TryAddValue("noun", "book").Result.Should().Be(TryAddValueResultEnum.Success);
 
                 Subject.TryRemoveValue("noun", "book");
 
@@ -129,7 +130,7 @@ namespace SlackBotRedux.Tests.Data.Sql
             [TestMethod]
             public void ShouldSetVariableProtectionInDatabase()
             {
-                Subject.AddVariable("noun", false);
+                Subject.AddVariable("noun", false).Should().Be(AddVariableResult.Success);
 
                 Subject.SetVariableProtection("noun", true);
 

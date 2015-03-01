@@ -21,7 +21,7 @@ namespace SlackBotRedux.Data.Sql
 
         public VariableRepository(IDbConnection conn, IVariableConfiguration config)
         {
-            _variableCache = new VariableDictionary(config.PrefixString, config.AllowedNameCharactersRegex);
+            _variableCache = new VariableDictionary(config.PrefixString, config.AllowedNameCharactersRegex, config.InvalidNameCharactersRegex);
             _conn = conn;
             _config = config;
 
@@ -59,14 +59,14 @@ namespace SlackBotRedux.Data.Sql
             Logger.Info("Finished loading variable data from database.");
         }
 
-        public bool AddVariable(string variableName, bool isProtected)
+        public AddVariableResult AddVariable(string variableName, bool isProtected)
         {
             var result = _variableCache.AddVariable(variableName, isProtected);
-            if (!result) return false;
+            if (result != AddVariableResult.Success) return result;
 
             InsertVariable(variableName, isProtected);
 
-            return true;
+            return result;
         }
 
         public bool DeleteVariable(string variableName, bool overrideProtection)

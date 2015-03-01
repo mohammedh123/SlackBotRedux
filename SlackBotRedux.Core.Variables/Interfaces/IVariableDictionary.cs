@@ -4,6 +4,14 @@ using System.Linq;
 
 namespace SlackBotRedux.Core.Variables
 {
+    public enum AddVariableResult
+    {
+        Success,
+    
+        VariableAlreadyExists,
+        InvalidVariableName
+    }
+
     public enum TryAddValueResultEnum
     {
         Success,
@@ -43,8 +51,7 @@ namespace SlackBotRedux.Core.Variables.Interfaces
         /// <summary>
         /// Adds a variable.
         /// </summary>
-        /// <returns><b>true</b> if the variable was added; <b>false</b> if the variable already existed</returns>
-        bool AddVariable(string variableName, bool isProtected);
+        AddVariableResult AddVariable(string variableName, bool isProtected);
 
         /// <summary>
         /// Deletes a variable.

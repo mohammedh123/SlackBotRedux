@@ -11,6 +11,7 @@ namespace SlackBotRedux.Tests.Core.Variables
     {
         private const string DefaultVariablePrefix = "$";
         private const string DefaultAllowedVariableNameCharacters = "[a-zA-Z0-9_-]";
+        private const string DefaultInvalidVariableNameCharacters = "[^a-zA-Z0-9_-]";
         protected VariableDictionary Subject;
 
         private readonly Func<VariableDefinition, string> _defaultVarName = vd => vd.Value;
@@ -18,7 +19,7 @@ namespace SlackBotRedux.Tests.Core.Variables
         [TestInitialize]
         public void Setup()
         {
-            Subject = new VariableDictionary(DefaultVariablePrefix, DefaultAllowedVariableNameCharacters);
+            Subject = new VariableDictionary(DefaultVariablePrefix, DefaultAllowedVariableNameCharacters, DefaultInvalidVariableNameCharacters);
         }
 
         [TestClass]
@@ -27,14 +28,14 @@ namespace SlackBotRedux.Tests.Core.Variables
             [TestMethod]
             public void ShouldReturnTrueWhenVariableDidNotExistBefore()
             {
-                Subject.AddVariable("noun").Should().Be(true);
+                Subject.AddVariable("noun").Should().Be(AddVariableResult.Success);
             }
 
             [TestMethod]
             public void ShouldReturnFalseWhenVariableAlreadyExists()
             {
-                Subject.AddVariable("noun").Should().Be(true);
-                Subject.AddVariable("noun").Should().Be(false);
+                Subject.AddVariable("noun").Should().Be(AddVariableResult.Success);
+                Subject.AddVariable("noun").Should().Be(AddVariableResult.VariableAlreadyExists);
             }
         }
 
@@ -89,7 +90,7 @@ namespace SlackBotRedux.Tests.Core.Variables
             [TestMethod]
             public void ShouldReturnNewlyCreatedVariable()
             {
-                Subject.AddVariable("noun").Should().Be(true);
+                Subject.AddVariable("noun").Should().Be(AddVariableResult.Success);
                 var variableDef = Subject.GetVariable("noun");
                 variableDef.Should().NotBeNull();
                 variableDef.Value.Should().Be("$noun");
@@ -230,7 +231,7 @@ namespace SlackBotRedux.Tests.Core.Variables
             [TestMethod]
             public void ShouldReturnSuccessForNewValue()
             {
-                Subject.AddVariable("noun").Should().Be(true);
+                Subject.AddVariable("noun").Should().Be(AddVariableResult.Success);
 
                 Subject.TryAddValue("noun", "$vegetable").Result.Should().Be(TryAddValueResultEnum.Success);
 
@@ -242,7 +243,7 @@ namespace SlackBotRedux.Tests.Core.Variables
             [TestMethod]
             public void ShouldCreateVariableForReferencedVariableInValue()
             {
-                Subject.AddVariable("noun").Should().Be(true);
+                Subject.AddVariable("noun").Should().Be(AddVariableResult.Success);
 
                 Subject.TryAddValue("noun", "$vegetable").Result.Should().Be(TryAddValueResultEnum.Success);
 
@@ -268,7 +269,7 @@ namespace SlackBotRedux.Tests.Core.Variables
             [TestMethod]
             public void ShouldReturnAlreadyExistsForExistingValue()
             {
-                Subject.AddVariable("food").Should().Be(true);
+                Subject.AddVariable("food").Should().Be(AddVariableResult.Success);
 
                 Subject.TryAddValue("food", "vegetable").Result.Should().Be(TryAddValueResultEnum.Success);
                 Subject.TryAddValue("food", "vegetable").Result
@@ -282,7 +283,7 @@ namespace SlackBotRedux.Tests.Core.Variables
             [TestMethod]
             public void ShouldReturnSuccessWhenAddingToVariableWithNoOtherValues()
             {
-                Subject.AddVariable("food").Should().Be(true);
+                Subject.AddVariable("food").Should().Be(AddVariableResult.Success);
 
                 var result = Subject.TryAddValue("food", "$vegetable");
                 result.Result.Should().Be(TryAddValueResultEnum.Success);
@@ -299,7 +300,7 @@ namespace SlackBotRedux.Tests.Core.Variables
             [TestMethod]
             public void ShouldReturnSuccessWhenAddingToRecursiveVariableWithOtherValues()
             {
-                Subject.AddVariable("food").Should().Be(true);
+                Subject.AddVariable("food").Should().Be(AddVariableResult.Success);
 
                 Subject.TryAddValue("food", "$vegetable").Result.Should().Be(TryAddValueResultEnum.Success);
                 Subject.TryAddValue("food", "onion").Result.Should().Be(TryAddValueResultEnum.Success);
@@ -316,8 +317,8 @@ namespace SlackBotRedux.Tests.Core.Variables
             [TestMethod]
             public void ShouldReturnSuccessForComplexScenario()
             {
-                Subject.AddVariable("food").Should().Be(true);
-                Subject.AddVariable("vegetable").Should().Be(true);
+                Subject.AddVariable("food").Should().Be(AddVariableResult.Success);
+                Subject.AddVariable("vegetable").Should().Be(AddVariableResult.Success);
 
                 Subject.TryAddValue("food", "$vegetable").Result.Should().Be(TryAddValueResultEnum.Success);
                 Subject.TryAddValue("vegetable", "onion").Result.Should().Be(TryAddValueResultEnum.Success);
@@ -335,7 +336,7 @@ namespace SlackBotRedux.Tests.Core.Variables
             [TestMethod]
             public void ShouldReturnSuccessWhenAddingToVariableWithMatchingSubstring()
             {
-                Subject.AddVariable("food").Should().Be(true);
+                Subject.AddVariable("food").Should().Be(AddVariableResult.Success);
 
                 Subject.TryAddValue("food", "$vegetable").Result.Should().Be(TryAddValueResultEnum.Success);
                 Subject.TryAddValue("vegetable", "$foodstuff").Result
@@ -352,7 +353,7 @@ namespace SlackBotRedux.Tests.Core.Variables
             [TestMethod]
             public void ShouldReturnSuccessWhenDealingWithSubstringValues()
             {
-                Subject.AddVariable("food").Should().Be(true);
+                Subject.AddVariable("food").Should().Be(AddVariableResult.Success);
 
                 Subject.TryAddValue("food", "$vegetable").Result.Should().Be(TryAddValueResultEnum.Success);
                 Subject.TryAddValue("food", "anti-$vegetable").Result.Should().Be(TryAddValueResultEnum.Success);
