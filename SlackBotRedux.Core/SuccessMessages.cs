@@ -8,5 +8,10 @@ namespace SlackBotRedux.Core
         {
             return String.Format("Okay, {0}, remembering \"{1}.\"", username, textToBeRemembered);
         }
+
+        public static string SuccessfulAddValueToVariable(string username)
+        {
+            return String.Format("Okay, {0}.", username);
+        }
     }
 }

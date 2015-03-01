@@ -23,5 +23,15 @@ namespace SlackBotRedux.Core
         {
             return String.Format("{0}: To create a variable, just start adding values to it.", username);
         }
+
+        public static string VariableValueAlreadyExists(string username, string variableName, string variableValue)
+        {
+            return String.Format("Okay {0}, but {1} already had {2} as a value.", username, variableName, variableValue);
+        }
+
+        public static string CantModifyProtectedVariable(string username, string variableName)
+        {
+            return String.Format("Sorry {0}, but {1} is protected and cannot be modified.", username, variableName);
+        }
     }
 }

@@ -45,6 +45,14 @@
     <Compile Include="VariablesModule.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\SlackBotRedux.Configuration\SlackBotRedux.Configuration.csproj">
+      <Project>{A3629534-539C-4B90-9187-7A19645CE62D}</Project>
+      <Name>SlackBotRedux.Configuration</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SlackBotRedux.Core.Variables\SlackBotRedux.Core.Variables.csproj">
+      <Project>{2EA04097-1F72-4973-9D9D-CE016B20E7D2}</Project>
+      <Name>SlackBotRedux.Core.Variables</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SlackBotRedux.Data.Models\SlackBotRedux.Data.Models.csproj">
       <Project>{0F6EEA28-E3F4-4752-975A-60157B13E030}</Project>
       <Name>SlackBotRedux.Data.Models</Name>
