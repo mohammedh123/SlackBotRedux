@@ -77,12 +77,17 @@
     <Compile Include="Core.Modules\ModuleTest.cs" />
     <Compile Include="Core.Modules\TQuotesModule.cs" />
     <Compile Include="Core.Modules\TVariablesModule.cs" />
+    <Compile Include="Core.Variables\TVariableDictionary.cs" />
     <Compile Include="Core\TBot.cs" />
     <Compile Include="Data.Sql\TQuoteRepository.cs" />
     <Compile Include="DatabaseTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\SlackBotRedux.Core.Variables\SlackBotRedux.Core.Variables.csproj">
+      <Project>{2EA04097-1F72-4973-9D9D-CE016B20E7D2}</Project>
+      <Name>SlackBotRedux.Core.Variables</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SlackBotRedux.Data.Models\SlackBotRedux.Data.Models.csproj">
       <Project>{0F6EEA28-E3F4-4752-975A-60157B13E030}</Project>
       <Name>SlackBotRedux.Data.Models</Name>
