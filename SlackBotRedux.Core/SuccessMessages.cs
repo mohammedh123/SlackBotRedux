@@ -13,5 +13,10 @@ namespace SlackBotRedux.Core
         {
             return String.Format("Okay, {0}.", username);
         }
+
+        public static string SuccessfulRemoveValueToVariable(string username)
+        {
+            return String.Format("Okay, {0}.", username);
+        }
     }
 }

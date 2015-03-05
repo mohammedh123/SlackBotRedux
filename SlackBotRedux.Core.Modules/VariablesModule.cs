@@ -29,6 +29,7 @@ namespace SlackBotRedux.Core.Modules
                                               _config.AllowedValueCharactersRegex,
                                               _config.AllowedNameCharactersRegex);
 
+
             bot.RespondTo(addValueRegex, res =>
             {
                 var textMsg = (TextInputBotMessage) res.Message;
@@ -44,6 +45,23 @@ namespace SlackBotRedux.Core.Modules
 
                 var addResult = _variableDictionary.TryAddValue(varName, varValue);
                 res.Send(GetMessageFromAddResult(username, varName, varValue, addResult));
+            });
+
+
+            var removeValueRegex = String.Format(@"remove value (?<Value>{0}+) (?<Name>{1}+)",
+                                              _config.AllowedValueCharactersRegex,
+                                              _config.AllowedNameCharactersRegex);
+
+            bot.RespondTo(removeValueRegex, res =>
+            {
+                var textMsg = (TextInputBotMessage)res.Message;
+
+                var username = textMsg.User.Name;
+                var varName = textMsg.Match.Groups["Name"].Value;
+                var varValue = textMsg.Match.Groups["Value"].Value;
+                
+                var removeResult = _variableDictionary.TryRemoveValue(varName, varValue);
+                res.Send(GetMessageFromRemoveResult(username, varName, varValue, removeResult));
             });
         }
 
@@ -61,6 +79,22 @@ namespace SlackBotRedux.Core.Modules
                     return ErrorMessages.CantModifyProtectedVariable(username, name);
                 default:
                     throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        private string GetMessageFromRemoveResult(string username, string name, string value, TryRemoveValueResult result)
+        {
+            switch (result) {
+                case TryRemoveValueResult.Success:
+                    return SuccessMessages.SuccessfulRemoveValueToVariable(username);
+                case TryRemoveValueResult.VariableDoesNotExist:
+                    return ErrorMessages.VariableDoesNotExist(username, name);
+                case TryRemoveValueResult.ValueDoesNotExist:
+                    return ErrorMessages.VariableValueDoesNotExist(username, name, value);
+                case TryRemoveValueResult.VariableIsProtected:
+                    return ErrorMessages.CantModifyProtectedVariable(username, name);
+                default:
+                    throw new ArgumentOutOfRangeException("result");
             }
         }
     }
