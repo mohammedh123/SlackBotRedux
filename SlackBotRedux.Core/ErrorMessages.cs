@@ -26,7 +26,7 @@ namespace SlackBotRedux.Core
 
         public static string VariableValueAlreadyExists(string username, string variableName, string variableValue)
         {
-            return String.Format("Okay {0}, but {1} already had {2} as a value.", username, variableName, variableValue);
+            return String.Format("Okay {0}, but {1} already had \"{2}\" as a value.", username, variableName, variableValue);
         }
 
         public static string VariableDoesNotExist(string username, string variableName)
