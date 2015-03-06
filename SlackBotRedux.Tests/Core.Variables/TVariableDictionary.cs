@@ -218,9 +218,33 @@ namespace SlackBotRedux.Tests.Core.Variables
                 Subject.TryAddValue("a", "$c");
                 Subject.TryAddValue("a", "$e");
 
-                for (var i = 0; i < 1000; i++)
-                {
+                for (var i = 0; i < 1000; i++) {
                     Subject.ResolveRandomValueForVariable("a", _defaultVarName).Should().BeOneOf("wtf");
+                }
+            }
+
+            [TestMethod]
+            public void ShouldNotReturnSameValuesAlwaysForSameVariables()
+            {
+                Subject.AddVariable("digit");
+                Subject.TryAddValue("digit", "1");
+                Subject.TryAddValue("digit", "2");
+                Subject.TryAddValue("digit", "3");
+                Subject.TryAddValue("digit", "4");
+                Subject.TryAddValue("digit", "5");
+                Subject.TryAddValue("digit", "6");
+                Subject.TryAddValue("digit", "7");
+                Subject.TryAddValue("digit", "8");
+                Subject.TryAddValue("digit", "9");
+
+                Subject.AddVariable("testvar");
+                Subject.TryAddValue("testvar", String.Concat(Enumerable.Repeat("$digit", 15)));
+
+                var val = Subject.ResolveRandomValueForVariable("testvar", _defaultVarName);
+                // chances of digits colliding is low enough that this is good enough for me
+                // i cannot believe this api has a BeOneOf but not NotBeOneOf
+                for (var c = '1'; c <= '9'; c++) {
+                    val.Should().NotBe(new string(c, 15));
                 }
             }
         }
