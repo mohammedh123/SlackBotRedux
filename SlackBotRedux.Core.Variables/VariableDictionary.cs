@@ -135,11 +135,11 @@ namespace SlackBotRedux.Core.Variables
                 var currentValue = varDef.Value;
 
                 foreach (var referencedVar in varDef.VariablesReferenced) {
-                    var replacementValue = ResolveRandomValueForVariableImpl(referencedVar, defaultValueFunc,
-                                                                             condensedGraph,
-                                                                             seenVariadicValues, exhaustedSccs);
-
-                    currentValue = currentValue.Replace(referencedVar.Value, replacementValue);
+                    currentValue = Regex.Replace(currentValue, String.Format(@"({0})(?:\b|$)", Regex.Escape(referencedVar.Value)),
+                                                 m => ResolveRandomValueForVariableImpl(referencedVar, defaultValueFunc,
+                                                                                        condensedGraph,
+                                                                                        seenVariadicValues,
+                                                                                        exhaustedSccs));
                 }
 
                 return currentValue;
