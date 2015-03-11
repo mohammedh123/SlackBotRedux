@@ -64,5 +64,5 @@ A bot that integrates with Slack via the RTM API.
 - Detecting TLAs
 
 #### Config
-- set/get` commands
+- `set/get` commands
 - Various configuration variables (band_name, band_var, etc)
