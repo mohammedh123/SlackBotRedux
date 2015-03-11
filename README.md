@@ -12,11 +12,24 @@ A bot that integrates with Slack via the RTM API.
 
 ### Modules
 #### Quotes
-- "remember" command (remember s
-- "quotes" command
+- "remember" command (remember stuff people say)
+- "quotes" command (lists all quotes for a given user)
+
 #### Variables
+- ~~Allow circular references~~
+- ~~Allow referencing of other variables, including the same variable~~
+- ~~"add variable" command~~
+- "remove variable" command
+- ~~"add value" command~~
+- ~~"remove value" command~~
+- "list values" command
+
 #### Factoids
+
 #### Inventory
+
 #### People
+
 #### Commands
+
 #### TLAs
