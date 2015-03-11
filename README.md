@@ -12,7 +12,7 @@ A bot that integrates with Slack via the RTM API.
 
 ### Modules
 #### Quotes
-- `remember` command (remember stuff people say)
+- ~~`remember` command (remember stuff people say)~~
 - `quotes` command (lists all quotes for a given user)
 
 #### Variables
