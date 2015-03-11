@@ -9,6 +9,7 @@ A bot that integrates with Slack via the RTM API.
 - Rate-limit output queue
 - ~~Sending and receiving different Slack messages~~
 - Log everything (but censor anything said in private groups/DMs)
+- Usable console proxy
 
 ### Modules
 #### Quotes
