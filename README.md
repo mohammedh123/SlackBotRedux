@@ -2,6 +2,8 @@
 
 A bot that integrates with Slack via the RTM API.
 
+Currently **on hold** until summer because Robert's finally back to making his bot not crap.
+
 ## Roadmap (WIP)
 ### Bot Infrastructure
 - ~~Connecting to Slack via RTM API~~
